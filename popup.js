@@ -1,5 +1,6 @@
 const form = document.getElementById("rule-form");
 const rulesList = document.getElementById("rules-list");
+const mergedRulesList = document.getElementById("merged-rules-list");
 
 const editIndexInput = document.getElementById("editIndex");
 const nameInput = document.getElementById("name");
@@ -20,6 +21,20 @@ async function saveCustomRules(rules) {
   });
 }
 
+async function getFileRules() {
+  try {
+    const response = await fetch(chrome.runtime.getURL("copyRules.json"));
+
+    if (!response.ok) {
+      return [];
+    }
+
+    return await response.json();
+  } catch (error) {
+    return [];
+  }
+}
+
 function resetForm() {
   form.reset();
   editIndexInput.value = "";
@@ -37,6 +52,43 @@ function enterEditMode(rule, index) {
   cancelEditButton.classList.remove("hidden");
 }
 
+function renderRuleItem(rule, source) {
+  const li = document.createElement("li");
+
+  li.innerHTML = `
+    <div class="rule-name">${rule.name} <span class="source">(${source})</span></div>
+    <div>Container: <code>${rule.containerSelector}</code></div>
+    <div>Text: <code>${rule.textSelector || "container text"}</code></div>
+  `;
+
+  return li;
+}
+
+async function renderMergedRules() {
+  const uiRules = await getCustomRules();
+  const fileRules = await getFileRules();
+  const mergedRules = mergeRules(uiRules, fileRules, DEFAULT_RULES);
+
+  mergedRulesList.innerHTML = "";
+
+  if (mergedRules.length === 0) {
+    mergedRulesList.innerHTML = "<li>No rules available.</li>";
+    return;
+  }
+
+  mergedRules.forEach((rule) => {
+    let source = "Default";
+
+    if (uiRules.includes(rule)) {
+      source = "UI";
+    } else if (fileRules.includes(rule)) {
+      source = "JSON";
+    }
+
+    mergedRulesList.appendChild(renderRuleItem(rule, source));
+  });
+}
+
 async function renderRules() {
   const rules = await getCustomRules();
 
@@ -44,26 +96,28 @@ async function renderRules() {
 
   if (rules.length === 0) {
     rulesList.innerHTML = "<li>No custom rules yet.</li>";
-    return;
+  } else {
+    rules.forEach((rule, index) => {
+      const li = document.createElement("li");
+
+      li.innerHTML = `
+        <div class="rule-name">${rule.name}</div>
+        <div>Container: <code>${rule.containerSelector}</code></div>
+        <div>Text: <code>${rule.textSelector || "container text"}</code></div>
+
+        <div class="rule-actions">
+          <button class="edit-btn" data-index="${index}">Edit</button>
+          <button class="delete-btn" data-index="${index}">Delete</button>
+        </div>
+      `;
+
+      rulesList.appendChild(li);
+    });
   }
 
-  rules.forEach((rule, index) => {
-    const li = document.createElement("li");
-
-    li.innerHTML = `
-      <div class="rule-name">${rule.name}</div>
-      <div>Container: <code>${rule.containerSelector}</code></div>
-      <div>Text: <code>${rule.textSelector || "container text"}</code></div>
-
-      <div class="rule-actions">
-        <button class="edit-btn" data-index="${index}">Edit</button>
-        <button class="delete-btn" data-index="${index}">Delete</button>
-      </div>
-    `;
-
-    rulesList.appendChild(li);
-  });
+  await renderMergedRules();
 }
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
