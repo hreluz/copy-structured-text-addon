@@ -1,0 +1,7 @@
+[
+  {
+    "name": "Custom card",
+    "containerSelector": ".card",
+    "textSelector": ".card-title"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Copy Structured Text",
+  "version": "1.3.0",
+  "permissions": ["contextMenus", "activeTab", "clipboardWrite"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["copyRules.json"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["defaultRules.js", "extractText.js", "content.js"]
+    }
+  ]
+}
