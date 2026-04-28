@@ -2,52 +2,92 @@ const { JSDOM } = require("jsdom");
 const { extractText } = require("./extractText");
 const { DEFAULT_RULES } = require("./defaultRules");
 
-describe("extractText with default rules", () => {
-  test("uses default HTB rule", () => {
-    const dom = new JSDOM(`
-      <div>
-        <span>Task 4</span>
-        <span data-testid="title-4">Vulnerability VIII - Injection</span>
-      </div>
-    `);
-
-    const target = dom.window.document.querySelector("span");
-
-    expect(extractText(target, DEFAULT_RULES))
-      .toBe("Vulnerability VIII - Injection");
-  });
-
-  test("uses default link fallback", () => {
-    const dom = new JSDOM(`
-      <a href="#">Example Link</a>
-    `);
-
-    const target = dom.window.document.querySelector("a");
-
-    expect(extractText(target, DEFAULT_RULES))
-      .toBe("Example Link");
-  });
-
-  test("external rules override defaults", () => {
-    const customRules = [
+describe("extractText", () => {
+  test("uses UI rules first", () => {
+    const uiRules = [
       {
-        name: "Override",
+        name: "UI rule",
         containerSelector: "div",
-        textSelector: ".custom"
+        textSelector: ".ui-title"
       }
     ];
 
+    const fileRules = [
+      {
+        name: "File rule",
+        containerSelector: "div",
+        textSelector: ".file-title"
+      }
+    ];
+
+    const rules = [...uiRules, ...fileRules, ...DEFAULT_RULES];
+
     const dom = new JSDOM(`
       <div>
-        <span class="custom">Override Text</span>
-        <span data-testid="title-4">Should NOT be used</span>
+        <span class="ui-title">UI Title</span>
+        <span class="file-title">File Title</span>
+        <span data-testid="title-4">Default Title</span>
       </div>
     `);
 
     const target = dom.window.document.querySelector("div");
 
-    const merged = [...customRules, ...DEFAULT_RULES];
+    expect(extractText(target, rules)).toBe("UI Title");
+  });
 
-    expect(extractText(target, merged)).toBe("Override Text");
+  test("uses file rules before default rules", () => {
+    const fileRules = [
+      {
+        name: "File rule",
+        containerSelector: "div",
+        textSelector: ".file-title"
+      }
+    ];
+
+    const rules = [...fileRules, ...DEFAULT_RULES];
+
+    const dom = new JSDOM(`
+      <div>
+        <span class="file-title">File Title</span>
+        <span data-testid="title-4">Default Title</span>
+      </div>
+    `);
+
+    const target = dom.window.document.querySelector("div");
+
+    expect(extractText(target, rules)).toBe("File Title");
+  });
+
+  test("falls back to default rules", () => {
+    const dom = new JSDOM(`
+      <div>
+        <span>Task 4</span>
+        <span data-testid="title-4">Default Title</span>
+      </div>
+    `);
+
+    const target = dom.window.document.querySelector("div");
+
+    expect(extractText(target, DEFAULT_RULES)).toBe("Default Title");
+  });
+
+  test("uses default link rule", () => {
+    const dom = new JSDOM(`
+      <a href="https://example.com">Example Link</a>
+    `);
+
+    const target = dom.window.document.querySelector("a");
+
+    expect(extractText(target, DEFAULT_RULES)).toBe("Example Link");
+  });
+
+  test("returns null when no rule matches", () => {
+    const dom = new JSDOM(`
+      <button>Click me</button>
+    `);
+
+    const target = dom.window.document.querySelector("button");
+
+    expect(extractText(target, DEFAULT_RULES)).toBe(null);
   });
 });

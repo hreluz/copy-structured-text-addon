@@ -2,24 +2,34 @@ let lastRightClickedText = null;
 let rules = [];
 
 async function loadRules() {
+  const stored = await chrome.storage.local.get(["customRules"]);
+  const customRules = stored.customRules || [];
+
+  let fileRules = [];
+
   try {
     const url = chrome.runtime.getURL("copyRules.json");
     const response = await fetch(url);
 
     if (response.ok) {
-      const externalRules = await response.json();
-      rules = [...externalRules, ...DEFAULT_RULES];
-      return;
+      fileRules = await response.json();
     }
-  } catch (e) {
-    // ignore
+  } catch (error) {
+    fileRules = [];
   }
 
-  // fallback to defaults only
-  rules = DEFAULT_RULES;
+  rules = [...customRules, ...fileRules, ...DEFAULT_RULES];
 }
 
 loadRules();
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName !== "local") return;
+
+  if (changes.customRules) {
+    loadRules();
+  }
+});
 
 document.addEventListener("contextmenu", (event) => {
   lastRightClickedText = extractText(event.target, rules);

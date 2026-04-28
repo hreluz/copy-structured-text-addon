@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Copy Rules</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <h1>Copy Rules</h1>
+
+  <form id="rule-form">
+    <label>
+      Name
+      <input id="name" type="text" placeholder="Custom card title" required />
+    </label>
+
+    <label>
+      Container Selector
+      <input id="containerSelector" type="text" placeholder=".card" required />
+    </label>
+
+    <label>
+      Text Selector
+      <input id="textSelector" type="text" placeholder=".card-title" />
+    </label>
+
+    <button type="submit">Add Rule</button>
+  </form>
+
+  <hr />
+
+  <h2>Custom Rules</h2>
+  <ul id="rules-list"></ul>
+
+  <script src="popup.js"></script>
+</body>
+</html>

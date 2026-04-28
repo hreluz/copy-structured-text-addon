@@ -13,15 +13,18 @@ Instead of copying raw text, you define **what part of the DOM should be extract
 - Supports:
   - Link text (`<a>`)
   - Complex DOM structures
-- **Configurable rules system**
-- External JSON rules (no code changes required)
+- **UI to create rules directly from the browser**
+- Supports BOTH:
+  - UI rules (stored locally)
+  - External JSON rules (`copyRules.json`)
+- Priority system (UI > JSON > Default)
 - Unit tested extraction logic
 
 ---
 
 ## Installation (Local)
 
-1. Open extensions page:
+1. Open:
 
 - Chrome: `chrome://extensions`
 - Brave: `brave://extensions`
@@ -36,80 +39,119 @@ Instead of copying raw text, you define **what part of the DOM should be extract
 
 ## Usage
 
+### Copy text
+
 1. Right-click any element
-2. Click: Copy structured text
-3. Paste → you get the extracted value based on rules
+2. Click: `Copy structured text`
+3. Paste → extracted value
 
 ---
 
-## Example
+### Create rules (UI)
 
-Given:
+1. Click the extension icon
+2. Fill:
 
-```html
-<div>
-  <span>Title 4</span>
-  <span data-testid="title-4">
-    Some data that needs to be copied
-  </span>
-</div>
-```
+- Name
+- Container Selector
+- Text Selector (optional)
 
-Right-click anywhere inside → copies:
-
-```
-    Some data that needs to be copied
-```
+3. Click **Add Rule**
 
 ---
 
-## How It Works
+## Rule Priority
 
-The extension uses **rules**:
-
-```json
-{
-  "containerSelector": "div",
-  "textSelector": "[data-testid^=\"title-\"]"
-}
 ```
-
-Meaning:
-
-When you click inside a `div`, extract the child matching `[data-testid^="title-"]`.
+UI rules (popup / chrome.storage)
+        ↓
+copyRules.json (external file)
+        ↓
+defaultRules.js (built-in fallback)
+```
 
 ---
 
 ## Rules System
 
-### 1. Default rules (built-in)
+### Rule structure
 
-Defined in:
-
+```json
+{
+  "name": "Task title",
+  "containerSelector": "div",
+  "textSelector": "[data-testid^=\"title-\"]"
+}
 ```
-defaultRules.js
-```
 
-```js
-const DEFAULT_RULES = [
-  {
-    name: "Task title",
-    containerSelector: "div",
-    textSelector: '[data-testid^="title-"]'
-  },
-  {
-    name: "Normal link text",
-    containerSelector: "a",
-    textSelector: null
-  }
-];
+### Behavior
+
+1. Find closest `containerSelector`
+2. Inside it:
+   - If `textSelector` exists → extract that element
+   - Else → use container text
+
+---
+
+## UI Examples
+
+### Example 1 — Task Title
+
+```txt
+Name: Task Title
+Container Selector: div
+Text Selector: [data-testid^="title-"]
 ```
 
 ---
 
-### 2. External rules (optional)
+### Example 2 — Copy `<h1>` title
 
-Defined in:
+```html
+<h1 class="auth-title xqwe-mb-24">Dashboard</h1>
+```
+
+```txt
+Name: Auth Title
+Container Selector: .auth-title
+Text Selector: (empty)
+```
+
+---
+
+### Example 3 — Strict selector
+
+```txt
+Name: Auth Title Strict
+Container Selector: h1.auth-title.xqwe-mb-24
+Text Selector: (empty)
+```
+
+---
+
+### Example 4 — Global extraction
+
+```txt
+Name: Global Header
+Container Selector: body
+Text Selector: .auth-title
+```
+
+---
+
+### Example 5 — Copy link text
+
+```txt
+Name: Link text
+Container Selector: a
+Text Selector: (empty)
+```
+
+---
+
+## External Rules (Optional)
+
+You can define rules in a JSON file:
 
 ```
 copyRules.json
@@ -123,15 +165,42 @@ Example:
     "name": "Custom card",
     "containerSelector": ".card",
     "textSelector": ".card-title"
+  },
+  {
+    "name": "Header Left",
+    "containerSelector": "#headerleft",
+    "textSelector": null
   }
 ]
 ```
 
+### Use cases
+
+- Shared team rules
+- Version-controlled configurations
+- Predefined setups
+
 ---
 
-### Rule Priority
+## Selectors Guide
 
-External rules (copyRules.json) override default rules.
+| Type        | Example        | Meaning              |
+|------------|--------------|----------------------|
+| ID         | `#headerleft` | Select by ID         |
+| Class      | `.card`       | Select by class      |
+| Tag        | `h1`          | Select by tag        |
+| Attribute  | `[data-id=1]` | Select by attribute  |
+| Starts with| `[data^=x]`   | Attribute starts with|
+
+---
+
+## Default Rules
+
+Defined in:
+
+```
+defaultRules.js
+```
 
 ---
 
@@ -145,6 +214,9 @@ External rules (copyRules.json) override default rules.
 ├── extractText.js
 ├── defaultRules.js
 ├── copyRules.json
+├── popup.html
+├── popup.js
+├── popup.css
 ├── extractText.test.js
 ├── package.json
 ├── README.md
@@ -171,33 +243,35 @@ npm test
 
 ## Testing
 
-Uses Jest and jsdom.
+Uses:
+
+- Jest
+- jsdom
+
+Covers:
+
+- Default rules
+- UI rules
+- JSON rules
+- Rule priority
+- Selector behavior
 
 ---
 
 ## Technical Notes
 
-- Uses Manifest V3
-- Context menu via contextMenus
-- Content scripts for DOM extraction
-- Clipboard via navigator.clipboard.writeText
+- Manifest V3
+- `contextMenus` for right-click
+- `chrome.storage.local` for UI rules
+- Clipboard via `navigator.clipboard.writeText`
 
 ---
 
 ## Limitations
 
-- Depends on DOM structure
-- Some sites may block context menu behavior
-- No UI for rule editing
-
----
-
-## Future Improvements
-
-- UI to create/edit rules
-- Element picker
-- Highlight extracted elements
-- Copy multiple fields
+- Depends on correct selectors
+- Some sites override right-click behavior
+- No visual selector picker yet
 
 ---
 
