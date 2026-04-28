@@ -1,6 +1,14 @@
 const form = document.getElementById("rule-form");
 const rulesList = document.getElementById("rules-list");
 
+const editIndexInput = document.getElementById("editIndex");
+const nameInput = document.getElementById("name");
+const containerSelectorInput = document.getElementById("containerSelector");
+const textSelectorInput = document.getElementById("textSelector");
+
+const submitButton = document.getElementById("submitButton");
+const cancelEditButton = document.getElementById("cancelEditButton");
+
 async function getCustomRules() {
   const result = await chrome.storage.local.get(["customRules"]);
   return result.customRules || [];
@@ -10,6 +18,23 @@ async function saveCustomRules(rules) {
   await chrome.storage.local.set({
     customRules: rules
   });
+}
+
+function resetForm() {
+  form.reset();
+  editIndexInput.value = "";
+  submitButton.textContent = "Add Rule";
+  cancelEditButton.classList.add("hidden");
+}
+
+function enterEditMode(rule, index) {
+  editIndexInput.value = String(index);
+  nameInput.value = rule.name;
+  containerSelectorInput.value = rule.containerSelector;
+  textSelectorInput.value = rule.textSelector || "";
+
+  submitButton.textContent = "Update Rule";
+  cancelEditButton.classList.remove("hidden");
 }
 
 async function renderRules() {
@@ -29,7 +54,11 @@ async function renderRules() {
       <div class="rule-name">${rule.name}</div>
       <div>Container: <code>${rule.containerSelector}</code></div>
       <div>Text: <code>${rule.textSelector || "container text"}</code></div>
-      <button class="delete-btn" data-index="${index}">Delete</button>
+
+      <div class="rule-actions">
+        <button class="edit-btn" data-index="${index}">Edit</button>
+        <button class="delete-btn" data-index="${index}">Delete</button>
+      </div>
     `;
 
     rulesList.appendChild(li);
@@ -39,34 +68,54 @@ async function renderRules() {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const name = document.getElementById("name").value.trim();
-  const containerSelector = document.getElementById("containerSelector").value.trim();
-  const textSelector = document.getElementById("textSelector").value.trim() || null;
+  const rule = {
+    name: nameInput.value.trim(),
+    containerSelector: containerSelectorInput.value.trim(),
+    textSelector: textSelectorInput.value.trim() || null
+  };
 
   const rules = await getCustomRules();
+  const editIndex = editIndexInput.value;
 
-  rules.unshift({
-    name,
-    containerSelector,
-    textSelector
-  });
+  let updatedRules;
 
-  await saveCustomRules(rules);
+  if (editIndex !== "") {
+    updatedRules = updateRule(rules, Number(editIndex), rule);
+  } else {
+    updatedRules = addRule(rules, rule);
+  }
 
-  form.reset();
+  await saveCustomRules(updatedRules);
+
+  resetForm();
   renderRules();
 });
 
 rulesList.addEventListener("click", async (event) => {
-  if (!event.target.classList.contains("delete-btn")) return;
+  const target = event.target;
 
-  const index = Number(event.target.dataset.index);
-  const rules = await getCustomRules();
+  if (target.classList.contains("edit-btn")) {
+    const index = Number(target.dataset.index);
+    const rules = await getCustomRules();
 
-  rules.splice(index, 1);
+    enterEditMode(rules[index], index);
+    return;
+  }
 
-  await saveCustomRules(rules);
-  renderRules();
+  if (target.classList.contains("delete-btn")) {
+    const index = Number(target.dataset.index);
+    const rules = await getCustomRules();
+
+    const updatedRules = deleteRule(rules, index);
+
+    await saveCustomRules(updatedRules);
+    resetForm();
+    renderRules();
+  }
+});
+
+cancelEditButton.addEventListener("click", () => {
+  resetForm();
 });
 
 renderRules();
