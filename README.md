@@ -47,16 +47,27 @@ Instead of copying raw text, you define **what part of the DOM should be extract
 
 ---
 
-### Create rules (UI)
+### Manage rules (UI)
 
 1. Click the extension icon
-2. Fill:
 
-- Name
-- Container Selector
-- Text Selector (optional)
+2. Create a rule:
+   - Fill:
+     - Name
+     - Container Selector
+     - Text Selector (optional)
+   - Click **Add Rule**
 
-3. Click **Add Rule**
+3. Edit a rule:
+   - Click **Edit**
+   - Modify the fields
+   - Click **Update Rule**
+
+4. Cancel editing:
+   - Click **Cancel Edit**
+
+5. Delete a rule:
+   - Click **Delete**
 
 ---
 
@@ -69,6 +80,14 @@ copyRules.json (external file)
         ↓
 defaultRules.js (built-in fallback)
 ```
+
+---
+
+### Rule Updates
+
+- Editing a rule keeps its priority position
+- New rules take highest priority
+- UI rules always override JSON and default rules
 
 ---
 
