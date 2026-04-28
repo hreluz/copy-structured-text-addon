@@ -7,6 +7,36 @@ let lastRightClickedResult = {
 
 let rules = [];
 
+function showCopyToast(message) {
+  const existingToast = document.getElementById("copy-structured-text-toast");
+
+  if (existingToast) {
+    existingToast.remove();
+  }
+
+  const toast = document.createElement("div");
+  toast.id = "copy-structured-text-toast";
+  toast.textContent = message;
+
+  toast.style.position = "fixed";
+  toast.style.top = "16px";
+  toast.style.right = "16px";
+  toast.style.zIndex = "999999";
+  toast.style.padding = "10px 14px";
+  toast.style.background = "#111";
+  toast.style.color = "#fff";
+  toast.style.borderRadius = "6px";
+  toast.style.fontSize = "13px";
+  toast.style.fontFamily = "Arial, sans-serif";
+  toast.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.25)";
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 2500);
+}
+
 async function loadRules() {
   const stored = await chrome.storage.local.get(["customRules"]);
   const customRules = stored.customRules || [];
@@ -58,13 +88,17 @@ chrome.runtime.onMessage.addListener(async (message) => {
 
   await navigator.clipboard.writeText(lastRightClickedResult.text);
 
+  const ruleName = lastRightClickedResult.rule?.name || "Unknown rule";
+
   await chrome.storage.local.set({
     lastMatchedRule: {
-      ruleName: lastRightClickedResult.rule?.name || null,
+      ruleName,
       text: lastRightClickedResult.text,
       copiedAt: new Date().toISOString()
     }
   });
+
+  showCopyToast(`Copied using rule: ${ruleName}`);
 
   console.log("Copied:", lastRightClickedResult.text);
 });
