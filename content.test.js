@@ -5,10 +5,7 @@ describe("content.js structure", () => {
   let content;
 
   beforeAll(() => {
-    content = fs.readFileSync(
-      path.resolve(__dirname, "content.js"),
-      "utf-8"
-    );
+    content = fs.readFileSync(path.resolve(__dirname, "content.js"), "utf-8");
   });
 
   test("defines rules state", () => {
@@ -20,7 +17,9 @@ describe("content.js structure", () => {
   });
 
   test("loads merged rules", () => {
-    expect(content).toContain("mergeRules(customRules, fileRules, DEFAULT_RULES)");
+    expect(content).toContain(
+      "mergeRules(customRules, fileRules, DEFAULT_RULES)",
+    );
   });
 
   test("uses extractTextResult from extractText.js", () => {
@@ -33,5 +32,22 @@ describe("content.js structure", () => {
 
   test("does not export module from content.js", () => {
     expect(content).not.toContain("module.exports");
+  });
+
+  test("defines showCopyToast helper", () => {
+    expect(content).toMatch(/function\s+showCopyToast\s*\(/);
+  });
+
+  test("shows matched rule after successful copy", () => {
+    expect(content).toContain(
+      "showCopyToast(`Copied using rule: ${ruleName}`)",
+    );
+  });
+
+  test("stores matched rule name before showing toast", () => {
+    expect(content).toContain(
+      'const ruleName = lastRightClickedResult.rule?.name || "Unknown rule"',
+    );
+    expect(content).toContain("ruleName,");
   });
 });
