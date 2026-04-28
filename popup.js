@@ -1,6 +1,7 @@
 const form = document.getElementById("rule-form");
 const rulesList = document.getElementById("rules-list");
 const mergedRulesList = document.getElementById("merged-rules-list");
+const lastMatch = document.getElementById("last-match");
 
 const editIndexInput = document.getElementById("editIndex");
 const nameInput = document.getElementById("name");
@@ -116,6 +117,7 @@ async function renderRules() {
   }
 
   await renderMergedRules();
+  await renderLastMatch();
 }
 
 form.addEventListener("submit", async (event) => {
@@ -176,6 +178,34 @@ rulesList.addEventListener("click", async (event) => {
 
 cancelEditButton.addEventListener("click", () => {
   resetForm();
+});
+
+async function renderLastMatch() {
+  const result = await chrome.storage.local.get(["lastMatchedRule"]);
+  const lastMatchedRule = result.lastMatchedRule;
+
+  if (!lastMatchedRule) {
+    lastMatch.textContent = "No copied rule yet.";
+    return;
+  }
+
+  lastMatch.innerHTML = `
+    <div><strong>Rule:</strong> ${lastMatchedRule.ruleName || "Unknown"}</div>
+    <div><strong>Text:</strong> <code>${lastMatchedRule.text}</code></div>
+    <div><strong>Copied at:</strong> ${lastMatchedRule.copiedAt}</div>
+  `;
+}
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName !== "local") return;
+
+  if (changes.lastMatchedRule) {
+    renderLastMatch();
+  }
+
+  if (changes.customRules) {
+    renderRules(); // keep UI in sync
+  }
 });
 
 renderRules();
