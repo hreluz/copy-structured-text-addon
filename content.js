@@ -62,7 +62,9 @@ async function loadRules() {
 loadRules();
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName !== "local") {return;}
+  if (areaName !== "local") {
+    return;
+  }
 
   if (changes.customRules) {
     loadRules();
@@ -79,7 +81,9 @@ document.addEventListener("contextmenu", (event) => {
 chrome.runtime.onMessage.addListener(async (message) => {
   console.log("Message received:", message);
 
-  if (message.type !== "COPY_STRUCTURED_TEXT") {return;}
+  if (message.type !== "COPY_STRUCTURED_TEXT") {
+    return;
+  }
 
   if (!lastRightClickedResult.text) {
     alert("No valid text found.");

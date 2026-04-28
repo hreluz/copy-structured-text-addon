@@ -197,7 +197,9 @@ async function renderLastMatch() {
 }
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName !== "local") {return;}
+  if (areaName !== "local") {
+    return;
+  }
 
   if (changes.lastMatchedRule) {
     renderLastMatch();

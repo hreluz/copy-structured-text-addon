@@ -5,7 +5,7 @@ module.exports = [
   js.configs.recommended,
 
   {
-    ignores: ["node_modules/**", "coverage/**"],
+    ignores: ["node_modules/**", "coverage/**"]
   },
 
   // Chrome extension browser files
@@ -25,14 +25,14 @@ module.exports = [
         validateRule: "readonly",
         updateRule: "readonly",
         addRule: "readonly",
-        deleteRule: "readonly",
-      },
+        deleteRule: "readonly"
+      }
     },
 
     rules: {
       "no-unused-vars": "warn",
-      "no-console": "off",
-    },
+      "no-console": "off"
+    }
   },
 
   // selectorValidation (browser + node because of document + module.exports)
@@ -44,14 +44,14 @@ module.exports = [
       sourceType: "script",
       globals: {
         ...globals.browser,
-        ...globals.node,
-      },
+        ...globals.node
+      }
     },
 
     rules: {
       "no-unused-vars": "warn",
-      "no-console": "off",
-    },
+      "no-console": "off"
+    }
   },
 
   // Node/CommonJS files and tests
@@ -62,7 +62,7 @@ module.exports = [
       "defaultRules.js",
       "extractText.js",
       "ruleMerger.js",
-      "ruleStorage.js",
+      "ruleStorage.js"
     ],
 
     languageOptions: {
@@ -70,13 +70,13 @@ module.exports = [
       sourceType: "commonjs",
       globals: {
         ...globals.node,
-        ...globals.jest,
-      },
+        ...globals.jest
+      }
     },
 
     rules: {
       "no-unused-vars": "warn",
-      "no-console": "off",
-    },
-  },
+      "no-console": "off"
+    }
+  }
 ];
