@@ -9,6 +9,8 @@
   <h1>Copy Rules</h1>
 
   <form id="rule-form">
+    <input id="editIndex" type="hidden" value="" />
+
     <label>
       Name
       <input id="name" type="text" placeholder="Custom card title" required />
@@ -24,7 +26,10 @@
       <input id="textSelector" type="text" placeholder=".card-title" />
     </label>
 
-    <button type="submit">Add Rule</button>
+    <button id="submitButton" type="submit">Add Rule</button>
+    <button id="cancelEditButton" type="button" class="secondary hidden">
+      Cancel Edit
+    </button>
   </form>
 
   <hr />
@@ -32,6 +37,7 @@
   <h2>Custom Rules</h2>
   <ul id="rules-list"></ul>
 
+  <script src="ruleStorage.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
