@@ -9,8 +9,12 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId !== "copy-structured-text") return;
-  if (!tab?.id) return;
+  if (info.menuItemId !== "copy-structured-text") {
+    return;
+  }
+  if (!tab?.id) {
+    return;
+  }
 
   try {
     await chrome.tabs.sendMessage(tab.id, {

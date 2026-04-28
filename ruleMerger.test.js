@@ -8,10 +8,6 @@ describe("mergeRules", () => {
 
     const result = mergeRules(uiRules, fileRules, defaultRules);
 
-    expect(result).toEqual([
-      { name: "UI Rule" },
-      { name: "JSON Rule" },
-      { name: "Default Rule" }
-    ]);
+    expect(result).toEqual([{ name: "UI Rule" }, { name: "JSON Rule" }, { name: "Default Rule" }]);
   });
 });

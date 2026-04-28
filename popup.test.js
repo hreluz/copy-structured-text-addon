@@ -6,10 +6,7 @@ describe("popup.html structure", () => {
   let document;
 
   beforeAll(() => {
-    const html = fs.readFileSync(
-      path.resolve(__dirname, "popup.html"),
-      "utf-8"
-    );
+    const html = fs.readFileSync(path.resolve(__dirname, "popup.html"), "utf-8");
 
     const dom = new JSDOM(html);
     document = dom.window.document;
@@ -26,9 +23,7 @@ describe("popup.html structure", () => {
   });
 
   test("loads scripts in correct order", () => {
-    const scripts = [...document.querySelectorAll("script")].map(
-      (s) => s.getAttribute("src")
-    );
+    const scripts = [...document.querySelectorAll("script")].map((s) => s.getAttribute("src"));
 
     expect(scripts).toEqual([
       "defaultRules.js",

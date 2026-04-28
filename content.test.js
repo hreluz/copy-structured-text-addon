@@ -17,9 +17,7 @@ describe("content.js structure", () => {
   });
 
   test("loads merged rules", () => {
-    expect(content).toContain(
-      "mergeRules(customRules, fileRules, DEFAULT_RULES)",
-    );
+    expect(content).toContain("mergeRules(customRules, fileRules, DEFAULT_RULES)");
   });
 
   test("uses extractTextResult from extractText.js", () => {
@@ -39,14 +37,12 @@ describe("content.js structure", () => {
   });
 
   test("shows matched rule after successful copy", () => {
-    expect(content).toContain(
-      "showCopyToast(`Copied using rule: ${ruleName}`)",
-    );
+    expect(content).toContain("showCopyToast(`Copied using rule: ${ruleName}`)");
   });
 
   test("stores matched rule name before showing toast", () => {
     expect(content).toContain(
-      'const ruleName = lastRightClickedResult.rule?.name || "Unknown rule"',
+      'const ruleName = lastRightClickedResult.rule?.name || "Unknown rule"'
     );
     expect(content).toContain("ruleName,");
   });
