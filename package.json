@@ -3,9 +3,14 @@
   "version": "1.1.0",
   "description": "Chrome and Brave extension to copy structured text from HTML elements.",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.2.1",
+    "globals": "^17.5.0",
     "jest": "^30.0.0",
     "jsdom": "^26.0.0"
   }

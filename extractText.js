@@ -9,13 +9,13 @@ function extractTextResult(target, rules) {
   for (const rule of rules) {
     const container = target.closest(rule.containerSelector);
 
-    if (!container) continue;
+    if (!container) {continue;}
 
     const element = rule.textSelector
       ? container.querySelector(rule.textSelector)
       : container;
 
-    if (!element) continue;
+    if (!element) {continue;}
 
     const text = element.textContent.trim();
 

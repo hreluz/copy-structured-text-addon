@@ -10,7 +10,7 @@ function isValidSelector(selector) {
   try {
     document.createDocumentFragment().querySelector(selector);
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
