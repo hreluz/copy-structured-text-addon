@@ -90,4 +90,28 @@ describe("extractText", () => {
 
     expect(extractText(target, DEFAULT_RULES)).toBe(null);
   });
+
+  const { extractTextResult } = require("./extractText");
+
+  test("returns matched rule with extracted text", () => {
+    const rule = {
+      name: "Header rule",
+      containerSelector: "body",
+      textSelector: "#headerleft"
+    };
+
+    const dom = new JSDOM(`
+      <body>
+        <h1 id="headerleft">Dashboard</h1>
+      </body>
+    `);
+
+    const target = dom.window.document.body;
+
+    expect(extractTextResult(target, [rule])).toEqual({
+      text: "Dashboard",
+      rule
+    });
+  });
 });
+

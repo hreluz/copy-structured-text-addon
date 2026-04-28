@@ -1,4 +1,10 @@
-let lastRightClickedText = null;
+console.log("Copy Structured Text content script loaded");
+
+let lastRightClickedResult = {
+  text: null,
+  rule: null
+};
+
 let rules = [];
 
 async function loadRules() {
@@ -18,7 +24,9 @@ async function loadRules() {
     fileRules = [];
   }
 
-  rules = [...customRules, ...fileRules, ...DEFAULT_RULES];
+  rules = mergeRules(customRules, fileRules, DEFAULT_RULES);
+
+  console.log("Rules loaded:", rules);
 }
 
 loadRules();
@@ -32,16 +40,31 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
 });
 
 document.addEventListener("contextmenu", (event) => {
-  lastRightClickedText = extractText(event.target, rules);
+  lastRightClickedResult = extractTextResult(event.target, rules);
+
+  console.log("Right-click target:", event.target);
+  console.log("Last clicked result:", lastRightClickedResult);
 });
 
-chrome.runtime.onMessage.addListener((message) => {
+chrome.runtime.onMessage.addListener(async (message) => {
+  console.log("Message received:", message);
+
   if (message.type !== "COPY_STRUCTURED_TEXT") return;
 
-  if (!lastRightClickedText) {
+  if (!lastRightClickedResult.text) {
     alert("No valid text found.");
     return;
   }
 
-  navigator.clipboard.writeText(lastRightClickedText);
+  await navigator.clipboard.writeText(lastRightClickedResult.text);
+
+  await chrome.storage.local.set({
+    lastMatchedRule: {
+      ruleName: lastRightClickedResult.rule?.name || null,
+      text: lastRightClickedResult.text,
+      copiedAt: new Date().toISOString()
+    }
+  });
+
+  console.log("Copied:", lastRightClickedResult.text);
 });

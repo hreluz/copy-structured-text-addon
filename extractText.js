@@ -1,5 +1,10 @@
-function extractText(target, rules = COPY_RULES) {
-  if (!target) return null;
+function extractTextResult(target, rules) {
+  if (!target || !Array.isArray(rules)) {
+    return {
+      text: null,
+      rule: null
+    };
+  }
 
   for (const rule of rules) {
     const container = target.closest(rule.containerSelector);
@@ -14,14 +19,27 @@ function extractText(target, rules = COPY_RULES) {
 
     const text = element.textContent.trim();
 
-    if (text) return text;
+    if (text) {
+      return {
+        text,
+        rule
+      };
+    }
   }
 
-  return null;
+  return {
+    text: null,
+    rule: null
+  };
+}
+
+function extractText(target, rules) {
+  return extractTextResult(target, rules).text;
 }
 
 if (typeof module !== "undefined") {
   module.exports = {
-    extractText
+    extractText,
+    extractTextResult
   };
 }
