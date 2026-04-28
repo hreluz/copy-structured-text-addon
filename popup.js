@@ -64,7 +64,6 @@ async function renderRules() {
     rulesList.appendChild(li);
   });
 }
-
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -73,6 +72,13 @@ form.addEventListener("submit", async (event) => {
     containerSelector: containerSelectorInput.value.trim(),
     textSelector: textSelectorInput.value.trim() || null
   };
+
+  const validation = validateRule(rule);
+
+  if (!validation.isValid) {
+    alert(validation.errors.join("\n"));
+    return;
+  }
 
   const rules = await getCustomRules();
   const editIndex = editIndexInput.value;
