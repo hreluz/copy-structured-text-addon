@@ -124,7 +124,7 @@ async function renderRules() {
 }
 
 function downloadJson(filename, data) {
-  const blob = new Blob([serializeRules(data)], {
+  const blob = new Blob([globalThis.serializeRules(data)], {
     type: "application/json"
   });
 
@@ -144,8 +144,8 @@ function readJsonFile(file) {
 
     reader.onload = () => {
       try {
-        resolve(parseRulesJson(reader.result));
-      } catch (error) {
+        resolve(globalThis.parseRulesJson(reader.result));
+      } catch {
         reject(new Error("Invalid JSON file."));
       }
     };
