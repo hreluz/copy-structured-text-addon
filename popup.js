@@ -3,6 +3,8 @@ const rulesList = document.getElementById("rules-list");
 const mergedRulesList = document.getElementById("merged-rules-list");
 const lastMatch = document.getElementById("last-match");
 
+const pickElementButton = document.getElementById("pickElementButton");
+
 const exportRulesButton = document.getElementById("exportRulesButton");
 const importRulesInput = document.getElementById("importRulesInput");
 
@@ -283,4 +285,36 @@ importRulesInput.addEventListener("change", async (event) => {
   }
 });
 
+pickElementButton.addEventListener("click", async () => {
+  const [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  });
+
+  if (!tab?.id) {
+    alert("No active tab found.");
+    return;
+  }
+
+  await chrome.tabs.sendMessage(tab.id, {
+    type: "START_ELEMENT_PICKER"
+  });
+
+  window.close();
+});
+
+async function loadPendingPickedRule() {
+  const result = await chrome.storage.local.get(["pendingPickedRule"]);
+  const rule = result.pendingPickedRule;
+
+  if (!rule) return;
+
+  nameInput.value = rule.name;
+  containerSelectorInput.value = rule.containerSelector;
+  textSelectorInput.value = rule.textSelector || "";
+
+  await chrome.storage.local.remove(["pendingPickedRule"]);
+}
+
+loadPendingPickedRule();
 renderRules();

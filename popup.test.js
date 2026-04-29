@@ -34,4 +34,15 @@ describe("popup.html structure", () => {
       "popup.js"
     ]);
   });
+
+  test("has pick element button", () => {
+    const el = document.getElementById("pickElementButton");
+    expect(el).not.toBeNull();
+  });
+
+  test("loads popup.js script", () => {
+    const scripts = [...document.querySelectorAll("script")].map((s) => s.getAttribute("src"));
+
+    expect(scripts).toContain("popup.js");
+  });
 });
