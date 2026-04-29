@@ -13,7 +13,13 @@ Instead of copying raw text, you define **what part of the DOM should be extract
 - Supports:
   - Link text (`<a>`)
   - Complex DOM structures
-- **UI to create rules directly from the browser**
+- **UI to manage rules directly from the browser**
+  - Create rules
+  - Edit rules
+  - Delete rules
+- **Import / Export rules (JSON)**
+- **Shows which rule matched after copy (toast)**
+- **Displays last matched rule in popup**
 - Supports BOTH:
   - UI rules (stored locally)
   - External JSON rules (`copyRules.json`)
@@ -25,14 +31,11 @@ Instead of copying raw text, you define **what part of the DOM should be extract
 ## Installation (Local)
 
 1. Open:
-
 - Chrome: `chrome://extensions`
 - Brave: `brave://extensions`
 
 2. Enable **Developer mode**
-
 3. Click **Load unpacked**
-
 4. Select your project folder
 
 ---
@@ -63,11 +66,52 @@ Instead of copying raw text, you define **what part of the DOM should be extract
    - Modify the fields
    - Click **Update Rule**
 
-4. Cancel editing:
+4. Delete a rule:
+   - Click **Delete**
+
+5. Cancel editing:
    - Click **Cancel Edit**
 
-5. Delete a rule:
-   - Click **Delete**
+---
+
+### UI Behavior
+
+- New rules are added at the top
+- Edited rules keep their position
+- Deleting removes immediately
+- Changes persist using `chrome.storage.local`
+
+---
+
+## Import / Export Rules
+
+### Export
+- Click **Export Rules**
+- Downloads a JSON file with your custom rules
+
+### Import
+- Click **Import Rules**
+- Select a JSON file
+- Rules are validated before saving
+
+### Example JSON
+
+```json
+[
+  {
+    "name": "Header",
+    "containerSelector": "body",
+    "textSelector": "#headerleft"
+  }
+]
+```
+
+### Notes
+
+- Import replaces existing UI rules
+- Does NOT modify:
+  - `copyRules.json`
+  - `defaultRules.js`
 
 ---
 
@@ -83,14 +127,6 @@ defaultRules.js (built-in fallback)
 
 ---
 
-### Rule Updates
-
-- Editing a rule keeps its priority position
-- New rules take highest priority
-- UI rules always override JSON and default rules
-
----
-
 ## Rules System
 
 ### Rule structure
@@ -101,124 +137,6 @@ defaultRules.js (built-in fallback)
   "containerSelector": "div",
   "textSelector": "[data-testid^=\"title-\"]"
 }
-```
-
-### Behavior
-
-1. Find closest `containerSelector`
-2. Inside it:
-   - If `textSelector` exists → extract that element
-   - Else → use container text
-
----
-
-## UI Examples
-
-### Example 1 — Task Title
-
-```txt
-Name: Task Title
-Container Selector: div
-Text Selector: [data-testid^="title-"]
-```
-
----
-
-### Example 2 — Copy `<h1>` title
-
-```html
-<h1 class="auth-title xqwe-mb-24">Dashboard</h1>
-```
-
-```txt
-Name: Auth Title
-Container Selector: .auth-title
-Text Selector: (empty)
-```
-
----
-
-### Example 3 — Strict selector
-
-```txt
-Name: Auth Title Strict
-Container Selector: h1.auth-title.xqwe-mb-24
-Text Selector: (empty)
-```
-
----
-
-### Example 4 — Global extraction
-
-```txt
-Name: Global Header
-Container Selector: body
-Text Selector: .auth-title
-```
-
----
-
-### Example 5 — Copy link text
-
-```txt
-Name: Link text
-Container Selector: a
-Text Selector: (empty)
-```
-
----
-
-## External Rules (Optional)
-
-You can define rules in a JSON file:
-
-```
-copyRules.json
-```
-
-Example:
-
-```json
-[
-  {
-    "name": "Custom card",
-    "containerSelector": ".card",
-    "textSelector": ".card-title"
-  },
-  {
-    "name": "Header Left",
-    "containerSelector": "#headerleft",
-    "textSelector": null
-  }
-]
-```
-
-### Use cases
-
-- Shared team rules
-- Version-controlled configurations
-- Predefined setups
-
----
-
-## Selectors Guide
-
-| Type        | Example        | Meaning              |
-|------------|--------------|----------------------|
-| ID         | `#headerleft` | Select by ID         |
-| Class      | `.card`       | Select by class      |
-| Tag        | `h1`          | Select by tag        |
-| Attribute  | `[data-id=1]` | Select by attribute  |
-| Starts with| `[data^=x]`   | Attribute starts with|
-
----
-
-## Default Rules
-
-Defined in:
-
-```
-defaultRules.js
 ```
 
 ---
@@ -237,6 +155,10 @@ defaultRules.js
 ├── popup.js
 ├── popup.css
 ├── extractText.test.js
+├── ruleMerger.js
+├── ruleStorage.js
+├── selectorValidation.js
+├── rulesImportExport.js
 ├── package.json
 ├── README.md
 ├── .gitignore
@@ -246,51 +168,10 @@ defaultRules.js
 
 ## Development
 
-### Install dependencies
-
 ```bash
 npm install
-```
-
-### Run tests
-
-```bash
 npm test
 ```
-
----
-
-## Testing
-
-Uses:
-
-- Jest
-- jsdom
-
-Covers:
-
-- Default rules
-- UI rules
-- JSON rules
-- Rule priority
-- Selector behavior
-
----
-
-## Technical Notes
-
-- Manifest V3
-- `contextMenus` for right-click
-- `chrome.storage.local` for UI rules
-- Clipboard via `navigator.clipboard.writeText`
-
----
-
-## Limitations
-
-- Depends on correct selectors
-- Some sites override right-click behavior
-- No visual selector picker yet
 
 ---
 
