@@ -1,54 +1,69 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Copy Rules</title>
-    <link rel="stylesheet" href="popup.css" />
-  </head>
-  <body>
-    <h1>Copy Rules</h1>
 
-    <form id="rule-form">
-      <input id="editIndex" type="hidden" value="" />
+<head>
+  <meta charset="UTF-8" />
+  <title>Copy Rules</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
 
-      <label>
-        Name
-        <input id="name" type="text" placeholder="Custom card title" required />
-      </label>
+<body>
+  <h1>Copy Rules</h1>
 
-      <label>
-        Container Selector
-        <input id="containerSelector" type="text" placeholder=".card" required />
-      </label>
+  <form id="rule-form">
+    <input id="editIndex" type="hidden" value="" />
 
-      <label>
-        Text Selector
-        <input id="textSelector" type="text" placeholder=".card-title" />
-      </label>
+    <label>
+      Name
+      <input id="name" type="text" placeholder="Custom card title" required />
+    </label>
 
-      <button id="submitButton" type="submit">Add Rule</button>
-      <button id="cancelEditButton" type="button" class="secondary hidden">Cancel Edit</button>
-    </form>
+    <label>
+      Container Selector
+      <input id="containerSelector" type="text" placeholder=".card" required />
+    </label>
 
-    <hr />
+    <label>
+      Text Selector
+      <input id="textSelector" type="text" placeholder=".card-title" />
+    </label>
 
-    <h2>Custom Rules</h2>
-    <ul id="rules-list"></ul>
+    <button id="submitButton" type="submit">Add Rule</button>
+    <button id="cancelEditButton" type="button" class="secondary hidden">Cancel Edit</button>
+  </form>
 
-    <hr />
+  <hr />
 
-    <h2>Last Match</h2>
-    <div id="last-match">No copied rule yet.</div>
+  <h2>Import / Export</h2>
 
-    <hr />
+  <button id="exportRulesButton" type="button">Export Rules</button>
 
-    <h2>Final Rule Order</h2>
-    <ul id="merged-rules-list"></ul>
+  <label class="import-label">
+    Import Rules
+    <input id="importRulesInput" type="file" accept="application/json" />
+  </label>
 
-    <script src="defaultRules.js"></script>
-    <script src="ruleStorage.js"></script>
-    <script src="ruleMerger.js"></script>
-    <script src="selectorValidation.js"></script>
-    <script src="popup.js"></script>
-  </body>
+  <hr />
+
+  <h2>Custom Rules</h2>
+  <ul id="rules-list"></ul>
+
+  <hr />
+
+  <h2>Last Match</h2>
+  <div id="last-match">No copied rule yet.</div>
+
+  <hr />
+
+  <h2>Final Rule Order</h2>
+  <ul id="merged-rules-list"></ul>
+
+  <script src="defaultRules.js"></script>
+  <script src="ruleStorage.js"></script>
+  <script src="ruleMerger.js"></script>
+  <script src="selectorValidation.js"></script>
+  <script src="rulesImportExport.js"></script>
+  <script src="popup.js"></script>
+</body>
+
 </html>

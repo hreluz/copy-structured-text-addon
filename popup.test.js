@@ -30,6 +30,7 @@ describe("popup.html structure", () => {
       "ruleStorage.js",
       "ruleMerger.js",
       "selectorValidation.js",
+      "rulesImportExport.js",
       "popup.js"
     ]);
   });
