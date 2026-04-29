@@ -73,3 +73,12 @@ li {
   border-radius: 6px;
   word-break: break-word;
 }
+
+.import-label {
+  display: block;
+  margin-top: 10px;
+}
+
+#importRulesInput {
+  margin-top: 6px;
+}

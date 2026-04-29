@@ -5,6 +5,7 @@
     <title>Copy Rules</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
+
   <body>
     <h1>Copy Rules</h1>
 
@@ -32,6 +33,17 @@
 
     <hr />
 
+    <h2>Import / Export</h2>
+
+    <button id="exportRulesButton" type="button">Export Rules</button>
+
+    <label class="import-label">
+      Import Rules
+      <input id="importRulesInput" type="file" accept="application/json" />
+    </label>
+
+    <hr />
+
     <h2>Custom Rules</h2>
     <ul id="rules-list"></ul>
 
@@ -49,6 +61,7 @@
     <script src="ruleStorage.js"></script>
     <script src="ruleMerger.js"></script>
     <script src="selectorValidation.js"></script>
+    <script src="rulesImportExport.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

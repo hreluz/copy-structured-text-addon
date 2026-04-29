@@ -3,6 +3,9 @@ const rulesList = document.getElementById("rules-list");
 const mergedRulesList = document.getElementById("merged-rules-list");
 const lastMatch = document.getElementById("last-match");
 
+const exportRulesButton = document.getElementById("exportRulesButton");
+const importRulesInput = document.getElementById("importRulesInput");
+
 const editIndexInput = document.getElementById("editIndex");
 const nameInput = document.getElementById("name");
 const containerSelectorInput = document.getElementById("containerSelector");
@@ -120,6 +123,38 @@ async function renderRules() {
   await renderLastMatch();
 }
 
+function downloadJson(filename, data) {
+  const blob = new Blob([globalThis.serializeRules(data)], {
+    type: "application/json"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = filename;
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function readJsonFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      try {
+        resolve(globalThis.parseRulesJson(reader.result));
+      } catch {
+        reject(new Error("Invalid JSON file."));
+      }
+    };
+
+    reader.onerror = () => reject(new Error("Could not read file."));
+    reader.readAsText(file);
+  });
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -207,6 +242,44 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
 
   if (changes.customRules) {
     renderRules(); // keep UI in sync
+  }
+});
+exportRulesButton.addEventListener("click", async () => {
+  const rules = await getCustomRules();
+  downloadJson("copy-structured-text-rules.json", rules);
+});
+
+importRulesInput.addEventListener("change", async (event) => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  try {
+    const importedRules = await readJsonFile(file);
+
+    if (!Array.isArray(importedRules)) {
+      alert("Invalid rules file. Expected a JSON array.");
+      return;
+    }
+
+    for (const rule of importedRules) {
+      const validation = validateRule(rule);
+
+      if (!validation.isValid) {
+        alert(`Invalid rule "${rule.name || "Unnamed"}":\n${validation.errors.join("\n")}`);
+        return;
+      }
+    }
+
+    await saveCustomRules(importedRules);
+
+    resetForm();
+    renderRules();
+    alert("Rules imported successfully.");
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    importRulesInput.value = "";
   }
 });
 
