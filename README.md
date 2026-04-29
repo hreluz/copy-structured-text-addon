@@ -17,6 +17,7 @@ Instead of copying raw text, you define **what part of the DOM should be extract
   - Create rules
   - Edit rules
   - Delete rules
+- **Visual element picker (click to generate selector)**
 - **Import / Export rules (JSON)**
 - **Shows which rule matched after copy (toast)**
 - **Displays last matched rule in popup**
@@ -80,6 +81,31 @@ Instead of copying raw text, you define **what part of the DOM should be extract
 - Edited rules keep their position
 - Deleting removes immediately
 - Changes persist using `chrome.storage.local`
+
+---
+
+## Visual Element Picker
+
+Quickly create rules without writing selectors manually.
+
+### How it works
+
+1. Open the extension popup
+2. Click **Pick Element**
+3. Move your mouse over elements on the page (they will be highlighted)
+4. Click the element you want
+5. Re-open the popup
+6. The rule form will be pre-filled with a suggested selector
+7. Adjust if needed and click **Add Rule**
+
+### Tips
+
+- Press **Esc** to cancel picking
+- Prefer elements with stable attributes:
+  - `id`
+  - `data-testid`
+  - meaningful classes
+- You can refine the generated selector before saving
 
 ---
 
