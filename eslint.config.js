@@ -10,7 +10,7 @@ module.exports = [
 
   // Chrome extension browser files
   {
-    files: ["src/background.js", "src/content.js", "src/popup/popup.js"],
+    files: ["src/background.js", "src/popup/popup.js"],
 
     languageOptions: {
       ecmaVersion: "latest",
@@ -37,7 +37,26 @@ module.exports = [
     }
   },
 
-  // elementPicker (browser + node because of chrome/document + module.exports)
+  // toast.js (browser + node because of document + module.exports)
+  {
+    files: ["src/shared/toast.js"],
+
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "script",
+      globals: {
+        ...globals.browser,
+        ...globals.node
+      }
+    },
+
+    rules: {
+      "no-unused-vars": "warn",
+      "no-console": "off"
+    }
+  },
+
+  // elementPicker.js (browser + node, consumes showCopyToast + getElementSelector as globals)
   {
     files: ["src/shared/elementPicker.js"],
 
@@ -50,6 +69,50 @@ module.exports = [
         chrome: "readonly",
         getElementSelector: "readonly",
         showCopyToast: "readonly"
+      }
+    },
+
+    rules: {
+      "no-unused-vars": "warn",
+      "no-console": "off"
+    }
+  },
+
+  // rulesLoader.js (browser only, consumes mergeRules + DEFAULT_RULES as globals)
+  {
+    files: ["src/shared/rulesLoader.js"],
+
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "script",
+      globals: {
+        ...globals.browser,
+        chrome: "readonly",
+        DEFAULT_RULES: "readonly",
+        mergeRules: "readonly"
+      }
+    },
+
+    rules: {
+      "no-unused-vars": "warn",
+      "no-console": "off"
+    }
+  },
+
+  // contentListeners.js (browser only, consumes rules + showCopyToast + others as globals)
+  {
+    files: ["src/shared/contentListeners.js"],
+
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "script",
+      globals: {
+        ...globals.browser,
+        chrome: "readonly",
+        extractTextResult: "readonly",
+        startElementPicker: "readonly",
+        showCopyToast: "readonly",
+        rules: "readonly"
       }
     },
 
