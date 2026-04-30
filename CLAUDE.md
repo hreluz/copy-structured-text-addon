@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 npm install           # install dev dependencies
 npm test              # run all Jest tests
+npm run check         # lint + format check (run before committing)
 npm run lint          # ESLint check
 npm run lint:fix      # ESLint auto-fix
 npm run format        # Prettier format all files
@@ -14,6 +15,7 @@ npm run format:check  # Prettier check without writing
 ```
 
 Run a single test file:
+
 ```bash
 npx jest extractText.test.js
 ```

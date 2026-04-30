@@ -26,7 +26,30 @@ module.exports = [
         updateRule: "readonly",
         addRule: "readonly",
         deleteRule: "readonly",
-        getElementSelector: "readonly"
+        getElementSelector: "readonly",
+        startElementPicker: "readonly"
+      }
+    },
+
+    rules: {
+      "no-unused-vars": "warn",
+      "no-console": "off"
+    }
+  },
+
+  // elementPicker (browser + node because of chrome/document + module.exports)
+  {
+    files: ["src/shared/elementPicker.js"],
+
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "script",
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        chrome: "readonly",
+        getElementSelector: "readonly",
+        showCopyToast: "readonly"
       }
     },
 

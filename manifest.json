@@ -25,6 +25,7 @@
         "src/shared/ruleMerger.js",
         "src/shared/extractText.js",
         "src/shared/elementSelector.js",
+        "src/shared/elementPicker.js",
         "src/content.js"
       ]
     }

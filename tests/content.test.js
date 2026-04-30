@@ -47,30 +47,14 @@ describe("content.js structure", () => {
     expect(content).toContain("ruleName,");
   });
 
-  test("defines element picker state", () => {
-    expect(content).toContain("let pickerActive = false");
-    expect(content).toContain("let highlightedElement = null");
-  });
-
-  test("defines element picker helpers", () => {
-    expect(content).toMatch(/function\s+highlightElement\s*\(/);
-    expect(content).toMatch(/function\s+startElementPicker\s*\(/);
-    expect(content).toMatch(/function\s+stopElementPicker\s*\(/);
-  });
-
   test("listens for start element picker message", () => {
     expect(content).toContain('message.type === "START_ELEMENT_PICKER"');
     expect(content).toContain("startElementPicker()");
   });
 
-  test("stores picked rule in chrome storage", () => {
-    expect(content).toContain("pendingPickedRule");
-    expect(content).toContain("containerSelector: selector");
-    expect(content).toContain("textSelector: null");
-  });
-
-  test("supports escape key to cancel picker", () => {
-    expect(content).toContain('event.key === "Escape"');
-    expect(content).toContain("Element picker cancelled");
+  test("does not define element picker internals (delegated to elementPicker.js)", () => {
+    expect(content).not.toContain("let pickerActive");
+    expect(content).not.toMatch(/function\s+startElementPicker\s*\(/);
+    expect(content).not.toMatch(/function\s+stopElementPicker\s*\(/);
   });
 });
