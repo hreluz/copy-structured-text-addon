@@ -149,22 +149,29 @@ defaultRules.js (built-in fallback)
 ├── package.json
 ├── src/
 │   ├── background.js
-│   ├── content.js
 │   ├── copyRules.json
 │   ├── popup/
 │   │   ├── popup.html
 │   │   ├── popup.js
 │   │   └── popup.css
 │   └── shared/
+│       ├── contentListeners.js
 │       ├── defaultRules.js
+│       ├── elementPicker.js
 │       ├── elementSelector.js
 │       ├── extractText.js
 │       ├── ruleMerger.js
 │       ├── ruleStorage.js
 │       ├── rulesImportExport.js
-│       └── selectorValidation.js
+│       ├── rulesLoader.js
+│       ├── selectorValidation.js
+│       └── toast.js
 └── tests/
-    └── *.test.js
+    ├── popup/
+    │   ├── popup.test.js
+    │   └── popup-source.test.js
+    └── shared/
+        └── *.test.js
 ```
 
 ---
@@ -174,6 +181,7 @@ defaultRules.js (built-in fallback)
 ```bash
 npm install
 npm test
+npm run check   # lint + format check (run before committing)
 ```
 
 ---

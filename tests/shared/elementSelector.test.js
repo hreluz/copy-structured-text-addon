@@ -1,5 +1,5 @@
 const { JSDOM } = require("jsdom");
-const { getElementSelector } = require("../src/shared/elementSelector");
+const { getElementSelector } = require("../../src/shared/elementSelector");
 
 let document;
 

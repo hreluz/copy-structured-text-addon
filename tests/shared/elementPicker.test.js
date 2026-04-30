@@ -5,7 +5,7 @@ describe("elementPicker.js structure", () => {
   let source;
 
   beforeAll(() => {
-    source = fs.readFileSync(path.resolve(__dirname, "../src/shared/elementPicker.js"), "utf-8");
+    source = fs.readFileSync(path.resolve(__dirname, "../../src/shared/elementPicker.js"), "utf-8");
   });
 
   test("defines picker state", () => {

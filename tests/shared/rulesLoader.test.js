@@ -5,7 +5,7 @@ describe("rulesLoader.js structure", () => {
   let source;
 
   beforeAll(() => {
-    source = fs.readFileSync(path.resolve(__dirname, "../src/shared/rulesLoader.js"), "utf-8");
+    source = fs.readFileSync(path.resolve(__dirname, "../../src/shared/rulesLoader.js"), "utf-8");
   });
 
   test("defines rules state", () => {

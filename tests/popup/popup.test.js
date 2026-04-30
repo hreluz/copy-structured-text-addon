@@ -6,7 +6,7 @@ describe("popup.html structure", () => {
   let document;
 
   beforeAll(() => {
-    const html = fs.readFileSync(path.resolve(__dirname, "../src/popup/popup.html"), "utf-8");
+    const html = fs.readFileSync(path.resolve(__dirname, "../../src/popup/popup.html"), "utf-8");
 
     const dom = new JSDOM(html);
     document = dom.window.document;

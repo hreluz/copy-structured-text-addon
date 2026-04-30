@@ -1,5 +1,5 @@
 const { JSDOM } = require("jsdom");
-const { showCopyToast } = require("../src/shared/toast");
+const { showCopyToast } = require("../../src/shared/toast");
 
 let document;
 
