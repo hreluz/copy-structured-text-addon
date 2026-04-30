@@ -10,7 +10,7 @@ module.exports = [
 
   // Chrome extension browser files
   {
-    files: ["background.js", "content.js", "popup.js"],
+    files: ["src/background.js", "src/popup/popup.js"],
 
     languageOptions: {
       ecmaVersion: "latest",
@@ -26,7 +26,96 @@ module.exports = [
         updateRule: "readonly",
         addRule: "readonly",
         deleteRule: "readonly",
-        getElementSelector: "readonly"
+        toggleRule: "readonly",
+        getElementSelector: "readonly",
+        startElementPicker: "readonly"
+      }
+    },
+
+    rules: {
+      "no-unused-vars": "warn",
+      "no-console": "off"
+    }
+  },
+
+  // toast.js (browser + node because of document + module.exports)
+  {
+    files: ["src/shared/toast.js"],
+
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "script",
+      globals: {
+        ...globals.browser,
+        ...globals.node
+      }
+    },
+
+    rules: {
+      "no-unused-vars": "warn",
+      "no-console": "off"
+    }
+  },
+
+  // elementPicker.js (browser + node, consumes showCopyToast + getElementSelector + extractTextResult as globals)
+  {
+    files: ["src/shared/elementPicker.js"],
+
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "script",
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        chrome: "readonly",
+        getElementSelector: "readonly",
+        showCopyToast: "readonly",
+        extractTextResult: "readonly"
+      }
+    },
+
+    rules: {
+      "no-unused-vars": "warn",
+      "no-console": "off"
+    }
+  },
+
+  // rulesLoader.js (browser only, consumes mergeRules + DEFAULT_RULES as globals)
+  {
+    files: ["src/shared/rulesLoader.js"],
+
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "script",
+      globals: {
+        ...globals.browser,
+        chrome: "readonly",
+        DEFAULT_RULES: "readonly",
+        mergeRules: "readonly"
+      }
+    },
+
+    rules: {
+      "no-unused-vars": "warn",
+      "no-console": "off"
+    }
+  },
+
+  // contentListeners.js (browser only, consumes rules + showCopyToast + others as globals)
+  {
+    files: ["src/shared/contentListeners.js"],
+
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "script",
+      globals: {
+        ...globals.browser,
+        chrome: "readonly",
+        extractTextResult: "readonly",
+        startElementPicker: "readonly",
+        startRuleTester: "readonly",
+        showCopyToast: "readonly",
+        rules: "readonly"
       }
     },
 
@@ -38,7 +127,7 @@ module.exports = [
 
   // selectorValidation (browser + node because of document + module.exports)
   {
-    files: ["selectorValidation.js"],
+    files: ["src/shared/selectorValidation.js"],
 
     languageOptions: {
       ecmaVersion: "latest",
@@ -58,12 +147,12 @@ module.exports = [
   // Node/CommonJS files and tests
   {
     files: [
-      "*.test.js",
+      "tests/**/*.test.js",
       "eslint.config.js",
-      "defaultRules.js",
-      "extractText.js",
-      "ruleMerger.js",
-      "ruleStorage.js"
+      "src/shared/defaultRules.js",
+      "src/shared/extractText.js",
+      "src/shared/ruleMerger.js",
+      "src/shared/ruleStorage.js"
     ],
 
     languageOptions: {

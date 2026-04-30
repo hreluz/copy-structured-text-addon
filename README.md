@@ -17,6 +17,8 @@ Instead of copying raw text, you define **what part of the DOM should be extract
   - Create rules
   - Edit rules
   - Delete rules
+  - **Enable / disable rules** without deleting them
+  - **Test a rule** against any element on the page before using it
 - **Import / Export rules (JSON)**
 - **Shows which rule matched after copy (toast)**
 - **Displays last matched rule in popup**
@@ -69,7 +71,18 @@ Instead of copying raw text, you define **what part of the DOM should be extract
 4. Delete a rule:
    - Click **Delete**
 
-5. Cancel editing:
+5. Disable / enable a rule:
+   - Click **Disable** to stop a rule from matching without deleting it
+   - Click **Enable** to restore it
+   - Disabled rules show a grey **disabled** badge
+
+6. Test a rule against the page:
+   - Click **Test**
+   - The popup closes and hover-highlight mode activates
+   - Click any element — a toast shows what text the rule would extract, or "No match"
+   - Press **Esc** to cancel
+
+7. Cancel editing:
    - Click **Cancel Edit**
 
 ---
@@ -79,6 +92,7 @@ Instead of copying raw text, you define **what part of the DOM should be extract
 - New rules are added at the top
 - Edited rules keep their position
 - Deleting removes immediately
+- Disabled rules are stored but skipped during extraction
 - Changes persist using `chrome.storage.local`
 
 ---
@@ -135,9 +149,12 @@ defaultRules.js (built-in fallback)
 {
   "name": "Task title",
   "containerSelector": "div",
-  "textSelector": "[data-testid^=\"title-\"]"
+  "textSelector": "[data-testid^=\"title-\"]",
+  "enabled": true
 }
 ```
+
+`enabled` is optional — omitting it is treated as `true`.
 
 ---
 
@@ -146,22 +163,32 @@ defaultRules.js (built-in fallback)
 ```
 .
 ├── manifest.json
-├── background.js
-├── content.js
-├── extractText.js
-├── defaultRules.js
-├── copyRules.json
-├── popup.html
-├── popup.js
-├── popup.css
-├── extractText.test.js
-├── ruleMerger.js
-├── ruleStorage.js
-├── selectorValidation.js
-├── rulesImportExport.js
 ├── package.json
-├── README.md
-├── .gitignore
+├── src/
+│   ├── background.js
+│   ├── copyRules.json
+│   ├── popup/
+│   │   ├── popup.html
+│   │   ├── popup.js
+│   │   └── popup.css
+│   └── shared/
+│       ├── contentListeners.js
+│       ├── defaultRules.js
+│       ├── elementPicker.js
+│       ├── elementSelector.js
+│       ├── extractText.js
+│       ├── ruleMerger.js
+│       ├── ruleStorage.js
+│       ├── rulesImportExport.js
+│       ├── rulesLoader.js
+│       ├── selectorValidation.js
+│       └── toast.js
+└── tests/
+    ├── popup/
+    │   ├── popup.test.js
+    │   └── popup-source.test.js
+    └── shared/
+        └── *.test.js
 ```
 
 ---
@@ -171,6 +198,7 @@ defaultRules.js (built-in fallback)
 ```bash
 npm install
 npm test
+npm run check   # lint + format check (run before committing)
 ```
 
 ---

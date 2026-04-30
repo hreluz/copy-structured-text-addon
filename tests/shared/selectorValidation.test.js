@@ -1,5 +1,5 @@
 const { JSDOM } = require("jsdom");
-const { isValidSelector, validateRule } = require("./selectorValidation");
+const { isValidSelector, validateRule } = require("../../src/shared/selectorValidation");
 
 beforeAll(() => {
   const dom = new JSDOM("<!DOCTYPE html><body></body>");

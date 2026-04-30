@@ -5,15 +5,15 @@
   "description": "Copy structured text from selected HTML elements.",
   "permissions": ["contextMenus", "activeTab", "clipboardWrite", "storage", "tabs"],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "src/background.js"
   },
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "src/popup/popup.html",
     "default_title": "Copy Structured Text"
   },
   "web_accessible_resources": [
     {
-      "resources": ["copyRules.json"],
+      "resources": ["src/copyRules.json"],
       "matches": ["<all_urls>"]
     }
   ],
@@ -21,11 +21,14 @@
     {
       "matches": ["<all_urls>"],
       "js": [
-        "defaultRules.js",
-        "ruleMerger.js",
-        "extractText.js",
-        "elementSelector.js",
-        "content.js"
+        "src/shared/defaultRules.js",
+        "src/shared/ruleMerger.js",
+        "src/shared/extractText.js",
+        "src/shared/elementSelector.js",
+        "src/shared/toast.js",
+        "src/shared/elementPicker.js",
+        "src/shared/rulesLoader.js",
+        "src/shared/contentListeners.js"
       ]
     }
   ]

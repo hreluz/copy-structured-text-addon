@@ -1,4 +1,4 @@
-const { serializeRules, parseRulesJson } = require("./rulesImportExport");
+const { serializeRules, parseRulesJson } = require("../../src/shared/rulesImportExport");
 
 describe("rulesImportExport", () => {
   test("serializes rules as pretty JSON", () => {

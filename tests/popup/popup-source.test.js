@@ -5,7 +5,7 @@ describe("popup.js picker and cancel behavior", () => {
   let source;
 
   beforeAll(() => {
-    source = fs.readFileSync(path.resolve(__dirname, "popup.js"), "utf-8");
+    source = fs.readFileSync(path.resolve(__dirname, "../../src/popup/popup.js"), "utf-8");
   });
 
   test("sets cancel text to Cancel Edit in edit mode", () => {
@@ -26,5 +26,20 @@ describe("popup.js picker and cancel behavior", () => {
 
   test("cancel removes pending picked rule", () => {
     expect(source).toContain('chrome.storage.local.remove(["pendingPickedRule"])');
+  });
+
+  test("renders toggle-btn and test-btn in rule list", () => {
+    expect(source).toContain('class="toggle-btn"');
+    expect(source).toContain('class="test-btn"');
+  });
+
+  test("sends TEST_RULE message when test button is clicked", () => {
+    expect(source).toContain('type: "TEST_RULE"');
+    expect(source).toContain("rule");
+  });
+
+  test("applies rule-disabled class when rule is disabled", () => {
+    expect(source).toContain("rule-disabled");
+    expect(source).toContain("disabled-badge");
   });
 });

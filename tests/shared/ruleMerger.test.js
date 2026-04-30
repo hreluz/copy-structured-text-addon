@@ -1,4 +1,4 @@
-const { mergeRules } = require("./ruleMerger");
+const { mergeRules } = require("../../src/shared/ruleMerger");
 
 describe("mergeRules", () => {
   test("merges rules in priority order", () => {
