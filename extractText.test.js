@@ -113,4 +113,66 @@ describe("extractText", () => {
       rule
     });
   });
+
+  test("skips rule when textSelector matches nothing inside container", () => {
+    const noMatchRule = {
+      name: "Missing element",
+      containerSelector: "div",
+      textSelector: ".nonexistent"
+    };
+
+    const fallbackRule = {
+      name: "Fallback",
+      containerSelector: "div",
+      textSelector: ".real"
+    };
+
+    const dom = new JSDOM(`<div><span class="real">Found</span></div>`);
+    const target = dom.window.document.querySelector("div");
+
+    expect(extractTextResult(target, [noMatchRule, fallbackRule])).toEqual({
+      text: "Found",
+      rule: fallbackRule
+    });
+  });
+
+  test("skips rule when container text is empty after trim", () => {
+    const whitespaceRule = {
+      name: "Empty container",
+      containerSelector: ".inner",
+      textSelector: null
+    };
+
+    const realRule = {
+      name: "Real content",
+      containerSelector: ".outer",
+      textSelector: ".label"
+    };
+
+    // target is inside .inner (whitespace-only); .outer is the ancestor with real text
+    const dom = new JSDOM(`
+      <div class="outer">
+        <div class="inner">   </div>
+        <span class="label">Hello</span>
+      </div>
+    `);
+
+    const target = dom.window.document.querySelector(".inner");
+
+    expect(extractTextResult(target, [whitespaceRule, realRule])).toEqual({
+      text: "Hello",
+      rule: realRule
+    });
+  });
+
+  test("returns null text and null rule when target is null", () => {
+    expect(extractTextResult(null, DEFAULT_RULES)).toEqual({ text: null, rule: null });
+  });
+
+  test("returns null text and null rule when rules is not an array", () => {
+    const dom = new JSDOM(`<div>Hello</div>`);
+    const target = dom.window.document.querySelector("div");
+
+    expect(extractTextResult(target, null)).toEqual({ text: null, rule: null });
+  });
 });
