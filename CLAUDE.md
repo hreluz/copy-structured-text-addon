@@ -17,7 +17,7 @@ npm run format:check  # Prettier check without writing
 Run a single test file:
 
 ```bash
-npx jest extractText.test.js
+npx jest tests/shared/extractText.test.js
 ```
 
 ## Architecture
@@ -29,16 +29,18 @@ This is a **Chrome/Brave Manifest V3 extension** with no build step — plain JS
 Because the extension loads scripts as plain `<script>` tags (not modules), shared utilities are made available as implicit globals. The **content script** load order (from `manifest.json`) is:
 
 ```
-defaultRules.js → ruleMerger.js → extractText.js → elementSelector.js → content.js
+defaultRules.js → ruleMerger.js → extractText.js → elementSelector.js
+    → toast.js → elementPicker.js → rulesLoader.js → contentListeners.js
 ```
 
 The **popup** load order (from `popup.html` `<script>` tags) is:
 
 ```
-defaultRules.js → ruleStorage.js → ruleMerger.js → selectorValidation.js → rulesImportExport.js → popup.js
+../shared/defaultRules.js → ../shared/ruleStorage.js → ../shared/ruleMerger.js
+    → ../shared/selectorValidation.js → ../shared/rulesImportExport.js → popup.js
 ```
 
-Each utility file guards its `module.exports` with `if (typeof module !== "undefined")` so the same file works both in the browser (as a global) and in Node/Jest (as a CommonJS module).
+Files that are used in both browser and Node/Jest guard their exports with `if (typeof module !== "undefined")`. Files that only auto-execute in the browser (`rulesLoader.js`, `contentListeners.js`) have no `module.exports` at all.
 
 ### Rules pipeline
 
@@ -57,9 +59,11 @@ defaultRules.js (DEFAULT_RULES)     ← built-in fallback
 ### Message flow
 
 - **background.js** registers the context menu item and forwards `COPY_STRUCTURED_TEXT` to the active tab.
-- **content.js** captures the right-clicked target on `contextmenu`, then on `COPY_STRUCTURED_TEXT` writes to the clipboard, persists `lastMatchedRule` to `chrome.storage.local`, and shows a toast.
-- **content.js** also handles `START_ELEMENT_PICKER` to activate the visual element picker, which on click writes a `pendingPickedRule` to storage.
-- **popup.js** reads `pendingPickedRule` on open and pre-fills the add-rule form; it also listens to `chrome.storage.onChanged` to stay in sync with content script activity.
+- **rulesLoader.js** loads rules from `chrome.storage.local`, `copyRules.json`, and `DEFAULT_RULES` on init and reloads whenever `customRules` changes in storage.
+- **contentListeners.js** captures the right-clicked target on `contextmenu`, then on `COPY_STRUCTURED_TEXT` writes to the clipboard, persists `lastMatchedRule` to storage, and shows a toast. Also handles `START_ELEMENT_PICKER`.
+- **elementPicker.js** activates a visual hover-and-click picker; on click writes a `pendingPickedRule` to storage and calls `showCopyToast`.
+- **toast.js** provides `showCopyToast`, used by both `contentListeners.js` and `elementPicker.js`.
+- **popup.js** reads `pendingPickedRule` on open and pre-fills the add-rule form; listens to `chrome.storage.onChanged` to stay in sync with content script activity.
 
 ### Element selector generation
 
@@ -67,4 +71,7 @@ defaultRules.js (DEFAULT_RULES)     ← built-in fallback
 
 ### Testing approach
 
-Tests use Jest + jsdom. Utility files are `require()`'d directly because of the `module.exports` guard pattern — no Chrome API mock is needed for them. `content.test.js` and `popup-source.test.js` test structure by reading source files as strings and asserting key patterns exist, avoiding the need to execute browser-context code in Node.
+Tests live in `tests/shared/` and `tests/popup/`, mirroring the `src/` structure. Two patterns are used:
+
+- **Unit tests** (`extractText`, `elementSelector`, `ruleMerger`, `ruleStorage`, `rulesImportExport`, `selectorValidation`, `toast`) — `require()` the module directly and test behaviour with jsdom where needed. No Chrome API mock required.
+- **Source-string tests** (`elementPicker`, `rulesLoader`, `contentListeners`, `popup-source`) — read the source file as a string and assert key patterns exist. Used for browser-only files that auto-execute and depend on the Chrome runtime.
