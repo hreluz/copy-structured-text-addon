@@ -8,7 +8,7 @@
     "service_worker": "src/background.js"
   },
   "action": {
-    "default_popup": "src/popup.html",
+    "default_popup": "src/popup/popup.html",
     "default_title": "Copy Structured Text"
   },
   "web_accessible_resources": [
@@ -21,10 +21,10 @@
     {
       "matches": ["<all_urls>"],
       "js": [
-        "src/defaultRules.js",
-        "src/ruleMerger.js",
-        "src/extractText.js",
-        "src/elementSelector.js",
+        "src/shared/defaultRules.js",
+        "src/shared/ruleMerger.js",
+        "src/shared/extractText.js",
+        "src/shared/elementSelector.js",
         "src/content.js"
       ]
     }

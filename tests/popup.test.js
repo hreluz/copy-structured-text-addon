@@ -6,7 +6,7 @@ describe("popup.html structure", () => {
   let document;
 
   beforeAll(() => {
-    const html = fs.readFileSync(path.resolve(__dirname, "../src/popup.html"), "utf-8");
+    const html = fs.readFileSync(path.resolve(__dirname, "../src/popup/popup.html"), "utf-8");
 
     const dom = new JSDOM(html);
     document = dom.window.document;
@@ -26,11 +26,11 @@ describe("popup.html structure", () => {
     const scripts = [...document.querySelectorAll("script")].map((s) => s.getAttribute("src"));
 
     expect(scripts).toEqual([
-      "defaultRules.js",
-      "ruleStorage.js",
-      "ruleMerger.js",
-      "selectorValidation.js",
-      "rulesImportExport.js",
+      "../shared/defaultRules.js",
+      "../shared/ruleStorage.js",
+      "../shared/ruleMerger.js",
+      "../shared/selectorValidation.js",
+      "../shared/rulesImportExport.js",
       "popup.js"
     ]);
   });

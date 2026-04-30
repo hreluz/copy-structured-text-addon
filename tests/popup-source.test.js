@@ -5,7 +5,7 @@ describe("popup.js picker and cancel behavior", () => {
   let source;
 
   beforeAll(() => {
-    source = fs.readFileSync(path.resolve(__dirname, "../src/popup.js"), "utf-8");
+    source = fs.readFileSync(path.resolve(__dirname, "../src/popup/popup.js"), "utf-8");
   });
 
   test("sets cancel text to Cancel Edit in edit mode", () => {

@@ -146,22 +146,25 @@ defaultRules.js (built-in fallback)
 ```
 .
 ├── manifest.json
-├── background.js
-├── content.js
-├── extractText.js
-├── defaultRules.js
-├── copyRules.json
-├── popup.html
-├── popup.js
-├── popup.css
-├── extractText.test.js
-├── ruleMerger.js
-├── ruleStorage.js
-├── selectorValidation.js
-├── rulesImportExport.js
 ├── package.json
-├── README.md
-├── .gitignore
+├── src/
+│   ├── background.js
+│   ├── content.js
+│   ├── copyRules.json
+│   ├── popup/
+│   │   ├── popup.html
+│   │   ├── popup.js
+│   │   └── popup.css
+│   └── shared/
+│       ├── defaultRules.js
+│       ├── elementSelector.js
+│       ├── extractText.js
+│       ├── ruleMerger.js
+│       ├── ruleStorage.js
+│       ├── rulesImportExport.js
+│       └── selectorValidation.js
+└── tests/
+    └── *.test.js
 ```
 
 ---

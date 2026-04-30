@@ -1,6 +1,6 @@
 const { JSDOM } = require("jsdom");
-const { extractText } = require("../src/extractText");
-const { DEFAULT_RULES } = require("../src/defaultRules");
+const { extractText } = require("../src/shared/extractText");
+const { DEFAULT_RULES } = require("../src/shared/defaultRules");
 
 describe("extractText", () => {
   test("uses UI rules first", () => {
@@ -91,7 +91,7 @@ describe("extractText", () => {
     expect(extractText(target, DEFAULT_RULES)).toBe(null);
   });
 
-  const { extractTextResult } = require("../src/extractText");
+  const { extractTextResult } = require("../src/shared/extractText");
 
   test("returns matched rule with extracted text", () => {
     const rule = {

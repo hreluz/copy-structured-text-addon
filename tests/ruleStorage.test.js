@@ -1,4 +1,4 @@
-const { addRule, updateRule, deleteRule } = require("../src/ruleStorage");
+const { addRule, updateRule, deleteRule } = require("../src/shared/ruleStorage");
 
 describe("ruleStorage", () => {
   test("adds a new rule at the beginning (UI behavior)", () => {
