@@ -71,10 +71,74 @@ function startElementPicker() {
   showCopyToast("Pick an element. Press Esc to cancel.");
 }
 
+let testerActive = false;
+let testerRule = null;
+
+function stopRuleTester() {
+  testerActive = false;
+  testerRule = null;
+
+  if (highlightedElement) {
+    highlightedElement.style.outline = "";
+    highlightedElement = null;
+  }
+
+  document.removeEventListener("mouseover", handleTesterMouseOver, true);
+  document.removeEventListener("click", handleTesterClick, true);
+  document.removeEventListener("keydown", handleTesterKeyDown, true);
+}
+
+function handleTesterMouseOver(event) {
+  if (!testerActive) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  highlightElement(event.target);
+}
+
+function handleTesterClick(event) {
+  if (!testerActive) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const result = extractTextResult(event.target, [testerRule]);
+  const ruleName = testerRule.name;
+
+  if (result.text) {
+    showCopyToast(`Test match: "${result.text}" (rule: ${ruleName})`);
+  } else {
+    showCopyToast(`Test: No match for rule "${ruleName}"`);
+  }
+
+  stopRuleTester();
+}
+
+function handleTesterKeyDown(event) {
+  if (event.key === "Escape") {
+    stopRuleTester();
+    showCopyToast("Rule test cancelled");
+  }
+}
+
+function startRuleTester(rule) {
+  testerActive = true;
+  testerRule = rule;
+
+  document.addEventListener("mouseover", handleTesterMouseOver, true);
+  document.addEventListener("click", handleTesterClick, true);
+  document.addEventListener("keydown", handleTesterKeyDown, true);
+
+  showCopyToast(`Test mode: click an element to test rule "${rule.name}". Press Esc to cancel.`);
+}
+
 if (typeof module !== "undefined") {
   module.exports = {
     startElementPicker,
     stopElementPicker,
-    highlightElement
+    highlightElement,
+    startRuleTester,
+    stopRuleTester
   };
 }

@@ -117,6 +117,7 @@ async function renderRules() {
           <button class="edit-btn" data-index="${index}">Edit</button>
           <button class="delete-btn" data-index="${index}">Delete</button>
           <button class="toggle-btn" data-index="${index}">${rule.enabled === false ? "Enable" : "Disable"}</button>
+          <button class="test-btn" data-index="${index}">Test</button>
         </div>
       `;
 
@@ -224,6 +225,24 @@ rulesList.addEventListener("click", async (event) => {
 
     await saveCustomRules(updatedRules);
     renderRules();
+    return;
+  }
+
+  if (target.classList.contains("test-btn")) {
+    const index = Number(target.dataset.index);
+    const rules = await getCustomRules();
+    const rule = rules[index];
+
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+    if (!tab?.id) {
+      alert("No active tab found.");
+      return;
+    }
+
+    await chrome.tabs.sendMessage(tab.id, { type: "TEST_RULE", rule });
+
+    window.close();
   }
 });
 

@@ -20,6 +20,11 @@ chrome.runtime.onMessage.addListener(async (message) => {
     return;
   }
 
+  if (message.type === "TEST_RULE") {
+    startRuleTester(message.rule);
+    return;
+  }
+
   if (message.type !== "COPY_STRUCTURED_TEXT") {
     return;
   }

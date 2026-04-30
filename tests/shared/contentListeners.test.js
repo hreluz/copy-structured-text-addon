@@ -41,6 +41,11 @@ describe("contentListeners.js structure", () => {
     expect(source).toContain("showCopyToast(`Copied using rule: ${ruleName}`)");
   });
 
+  test("handles TEST_RULE message", () => {
+    expect(source).toContain('message.type === "TEST_RULE"');
+    expect(source).toContain("startRuleTester(message.rule)");
+  });
+
   test("does not export module (browser-only auto-executing file)", () => {
     expect(source).not.toContain("module.exports");
   });

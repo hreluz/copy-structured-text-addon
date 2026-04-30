@@ -57,7 +57,7 @@ module.exports = [
     }
   },
 
-  // elementPicker.js (browser + node, consumes showCopyToast + getElementSelector as globals)
+  // elementPicker.js (browser + node, consumes showCopyToast + getElementSelector + extractTextResult as globals)
   {
     files: ["src/shared/elementPicker.js"],
 
@@ -69,7 +69,8 @@ module.exports = [
         ...globals.node,
         chrome: "readonly",
         getElementSelector: "readonly",
-        showCopyToast: "readonly"
+        showCopyToast: "readonly",
+        extractTextResult: "readonly"
       }
     },
 
@@ -112,6 +113,7 @@ module.exports = [
         chrome: "readonly",
         extractTextResult: "readonly",
         startElementPicker: "readonly",
+        startRuleTester: "readonly",
         showCopyToast: "readonly",
         rules: "readonly"
       }

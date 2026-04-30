@@ -51,4 +51,28 @@ describe("elementPicker.js structure", () => {
   test("does not export module in browser context", () => {
     expect(source).toContain('typeof module !== "undefined"');
   });
+
+  test("defines startRuleTester and stopRuleTester functions", () => {
+    expect(source).toMatch(/function\s+startRuleTester\s*\(/);
+    expect(source).toMatch(/function\s+stopRuleTester\s*\(/);
+  });
+
+  test("startRuleTester shows test mode toast on activation", () => {
+    expect(source).toContain("Test mode: click an element to test rule");
+    expect(source).toContain("Press Esc to cancel");
+  });
+
+  test("rule tester shows match result via toast", () => {
+    expect(source).toContain("Test match:");
+    expect(source).toContain("Test: No match for rule");
+  });
+
+  test("rule tester uses extractTextResult for matching", () => {
+    expect(source).toContain("extractTextResult(event.target, [testerRule])");
+  });
+
+  test("exports startRuleTester and stopRuleTester", () => {
+    expect(source).toContain("startRuleTester");
+    expect(source).toContain("stopRuleTester");
+  });
 });
