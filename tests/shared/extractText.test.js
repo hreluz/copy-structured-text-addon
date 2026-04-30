@@ -188,6 +188,20 @@ describe("extractText", () => {
     });
   });
 
+  test("does not skip a rule with enabled: true explicitly set", () => {
+    const rule = {
+      name: "Explicit enabled",
+      containerSelector: "div",
+      textSelector: ".title",
+      enabled: true
+    };
+
+    const dom = new JSDOM(`<div><span class="title">Hello</span></div>`);
+    const target = dom.window.document.querySelector("div");
+
+    expect(extractTextResult(target, [rule])).toEqual({ text: "Hello", rule });
+  });
+
   test("returns null when all rules are disabled", () => {
     const rules = [
       { name: "R1", containerSelector: "div", textSelector: null, enabled: false },

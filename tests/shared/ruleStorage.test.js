@@ -137,6 +137,23 @@ describe("ruleStorage", () => {
     expect(result[1].enabled).toBeUndefined();
   });
 
+  test("toggleRule disables an explicitly enabled rule (enabled: true)", () => {
+    const rules = [{ name: "Rule 1", containerSelector: "a", textSelector: null, enabled: true }];
+    const result = toggleRule(rules, 0);
+
+    expect(result[0].enabled).toBe(false);
+  });
+
+  test("toggleRule preserves all other rule fields", () => {
+    const rules = [{ name: "My Rule", containerSelector: ".card", textSelector: ".title" }];
+    const result = toggleRule(rules, 0);
+
+    expect(result[0].name).toBe("My Rule");
+    expect(result[0].containerSelector).toBe(".card");
+    expect(result[0].textSelector).toBe(".title");
+    expect(result[0].enabled).toBe(false);
+  });
+
   test("toggleRule does not mutate original array", () => {
     const rules = [{ name: "Rule 1", containerSelector: "a", textSelector: null }];
     const result = toggleRule(rules, 0);

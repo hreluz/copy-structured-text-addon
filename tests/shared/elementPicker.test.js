@@ -52,9 +52,17 @@ describe("elementPicker.js structure", () => {
     expect(source).toContain('typeof module !== "undefined"');
   });
 
-  test("defines startRuleTester and stopRuleTester functions", () => {
+  test("defines tester state variables", () => {
+    expect(source).toContain("let testerActive = false");
+    expect(source).toContain("let testerRule = null");
+  });
+
+  test("defines all tester functions", () => {
     expect(source).toMatch(/function\s+startRuleTester\s*\(/);
     expect(source).toMatch(/function\s+stopRuleTester\s*\(/);
+    expect(source).toMatch(/function\s+handleTesterMouseOver\s*\(/);
+    expect(source).toMatch(/function\s+handleTesterClick\s*\(/);
+    expect(source).toMatch(/function\s+handleTesterKeyDown\s*\(/);
   });
 
   test("startRuleTester shows test mode toast on activation", () => {
@@ -69,6 +77,10 @@ describe("elementPicker.js structure", () => {
 
   test("rule tester uses extractTextResult for matching", () => {
     expect(source).toContain("extractTextResult(event.target, [testerRule])");
+  });
+
+  test("tester escape key cancels with 'Rule test cancelled' message", () => {
+    expect(source).toContain("Rule test cancelled");
   });
 
   test("exports startRuleTester and stopRuleTester", () => {
