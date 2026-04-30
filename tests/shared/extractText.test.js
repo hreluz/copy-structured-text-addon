@@ -165,6 +165,41 @@ describe("extractText", () => {
     });
   });
 
+  test("skips a disabled rule and falls through to the next", () => {
+    const disabledRule = {
+      name: "Disabled rule",
+      containerSelector: "div",
+      textSelector: ".title",
+      enabled: false
+    };
+
+    const activeRule = {
+      name: "Active rule",
+      containerSelector: "div",
+      textSelector: ".title"
+    };
+
+    const dom = new JSDOM(`<div><span class="title">Hello</span></div>`);
+    const target = dom.window.document.querySelector("div");
+
+    expect(extractTextResult(target, [disabledRule, activeRule])).toEqual({
+      text: "Hello",
+      rule: activeRule
+    });
+  });
+
+  test("returns null when all rules are disabled", () => {
+    const rules = [
+      { name: "R1", containerSelector: "div", textSelector: null, enabled: false },
+      { name: "R2", containerSelector: "div", textSelector: null, enabled: false }
+    ];
+
+    const dom = new JSDOM(`<div>Hello</div>`);
+    const target = dom.window.document.querySelector("div");
+
+    expect(extractTextResult(target, rules)).toEqual({ text: null, rule: null });
+  });
+
   test("returns null text and null rule when target is null", () => {
     expect(extractTextResult(null, DEFAULT_RULES)).toEqual({ text: null, rule: null });
   });

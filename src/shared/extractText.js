@@ -7,6 +7,8 @@ function extractTextResult(target, rules) {
   }
 
   for (const rule of rules) {
+    if (rule.enabled === false) continue;
+
     const container = target.closest(rule.containerSelector);
 
     if (!container) {

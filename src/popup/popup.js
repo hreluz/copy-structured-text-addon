@@ -109,13 +109,14 @@ async function renderRules() {
       const li = document.createElement("li");
 
       li.innerHTML = `
-        <div class="rule-name">${rule.name}</div>
+        <div class="rule-name${rule.enabled === false ? " rule-disabled" : ""}">${rule.name}${rule.enabled === false ? ' <span class="disabled-badge">disabled</span>' : ""}</div>
         <div>Container: <code>${rule.containerSelector}</code></div>
         <div>Text: <code>${rule.textSelector || "container text"}</code></div>
 
         <div class="rule-actions">
           <button class="edit-btn" data-index="${index}">Edit</button>
           <button class="delete-btn" data-index="${index}">Delete</button>
+          <button class="toggle-btn" data-index="${index}">${rule.enabled === false ? "Enable" : "Disable"}</button>
         </div>
       `;
 
@@ -211,6 +212,17 @@ rulesList.addEventListener("click", async (event) => {
 
     await saveCustomRules(updatedRules);
     resetForm();
+    renderRules();
+    return;
+  }
+
+  if (target.classList.contains("toggle-btn")) {
+    const index = Number(target.dataset.index);
+    const rules = await getCustomRules();
+
+    const updatedRules = toggleRule(rules, index);
+
+    await saveCustomRules(updatedRules);
     renderRules();
   }
 });

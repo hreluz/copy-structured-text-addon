@@ -5,7 +5,10 @@ describe("contentListeners.js structure", () => {
   let source;
 
   beforeAll(() => {
-    source = fs.readFileSync(path.resolve(__dirname, "../../src/shared/contentListeners.js"), "utf-8");
+    source = fs.readFileSync(
+      path.resolve(__dirname, "../../src/shared/contentListeners.js"),
+      "utf-8"
+    );
   });
 
   test("defines lastRightClickedResult state", () => {

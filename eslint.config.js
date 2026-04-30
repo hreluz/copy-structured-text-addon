@@ -26,6 +26,7 @@ module.exports = [
         updateRule: "readonly",
         addRule: "readonly",
         deleteRule: "readonly",
+        toggleRule: "readonly",
         getElementSelector: "readonly",
         startElementPicker: "readonly"
       }
@@ -144,7 +145,7 @@ module.exports = [
   // Node/CommonJS files and tests
   {
     files: [
-      "tests/*.test.js",
+      "tests/**/*.test.js",
       "eslint.config.js",
       "src/shared/defaultRules.js",
       "src/shared/extractText.js",

@@ -1,4 +1,4 @@
-const { addRule, updateRule, deleteRule } = require("../../src/shared/ruleStorage");
+const { addRule, updateRule, deleteRule, toggleRule } = require("../../src/shared/ruleStorage");
 
 describe("ruleStorage", () => {
   test("adds a new rule at the beginning (UI behavior)", () => {
@@ -103,5 +103,45 @@ describe("ruleStorage", () => {
 
     expect(rules[0].name).toBe("Rule 2");
     expect(rules[1].name).toBe("Rule 1");
+  });
+
+  test("toggleRule disables an enabled rule", () => {
+    const rules = [{ name: "Rule 1", containerSelector: "a", textSelector: null }];
+    const result = toggleRule(rules, 0);
+
+    expect(result[0].enabled).toBe(false);
+  });
+
+  test("toggleRule re-enables a disabled rule", () => {
+    const rules = [{ name: "Rule 1", containerSelector: "a", textSelector: null, enabled: false }];
+    const result = toggleRule(rules, 0);
+
+    expect(result[0].enabled).toBe(true);
+  });
+
+  test("toggleRule treats undefined enabled as enabled, so disables it", () => {
+    const rules = [{ name: "Rule 1", containerSelector: "a", textSelector: null }];
+    const result = toggleRule(rules, 0);
+
+    expect(result[0].enabled).toBe(false);
+  });
+
+  test("toggleRule only affects the target index", () => {
+    const rules = [
+      { name: "Rule 1", containerSelector: "a", textSelector: null },
+      { name: "Rule 2", containerSelector: ".b", textSelector: null }
+    ];
+    const result = toggleRule(rules, 0);
+
+    expect(result[0].enabled).toBe(false);
+    expect(result[1].enabled).toBeUndefined();
+  });
+
+  test("toggleRule does not mutate original array", () => {
+    const rules = [{ name: "Rule 1", containerSelector: "a", textSelector: null }];
+    const result = toggleRule(rules, 0);
+
+    expect(result).not.toBe(rules);
+    expect(rules[0].enabled).toBeUndefined();
   });
 });

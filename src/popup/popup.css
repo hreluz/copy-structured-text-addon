@@ -58,7 +58,22 @@ li {
 }
 
 .rule-actions button {
-  width: 50%;
+  flex: 1;
+}
+
+.rule-disabled {
+  opacity: 0.45;
+}
+
+.disabled-badge {
+  font-size: 10px;
+  font-weight: normal;
+  background: #e0e0e0;
+  color: #555;
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin-left: 4px;
+  vertical-align: middle;
 }
 
 .source {
