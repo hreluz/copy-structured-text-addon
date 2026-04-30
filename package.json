@@ -4,6 +4,8 @@
   "description": "Chrome and Brave extension to copy structured text from HTML elements.",
   "scripts": {
     "test": "jest",
+    "test:e2e": "jest --config jest.config.e2e.js",
+    "test:e2e:watch": "PUPPETEER_HEADLESS=false PUPPETEER_SLOW_MO=600 jest --config jest.config.e2e.js --runInBand",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
@@ -12,7 +14,8 @@
   },
   "jest": {
     "roots": [
-      "<rootDir>/tests",
+      "<rootDir>/tests/shared",
+      "<rootDir>/tests/popup",
       "<rootDir>/src"
     ]
   },
@@ -22,6 +25,7 @@
     "globals": "^17.5.0",
     "jest": "^30.0.0",
     "jsdom": "^26.0.0",
-    "prettier": "^3.8.3"
+    "prettier": "^3.8.3",
+    "puppeteer": "^24.42.0"
   }
 }
