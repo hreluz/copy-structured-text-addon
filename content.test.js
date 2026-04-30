@@ -53,7 +53,6 @@ describe("content.js structure", () => {
   });
 
   test("defines element picker helpers", () => {
-    expect(content).toMatch(/function\s+getElementSelector\s*\(/);
     expect(content).toMatch(/function\s+highlightElement\s*\(/);
     expect(content).toMatch(/function\s+startElementPicker\s*\(/);
     expect(content).toMatch(/function\s+stopElementPicker\s*\(/);

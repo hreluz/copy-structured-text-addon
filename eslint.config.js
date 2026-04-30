@@ -25,7 +25,8 @@ module.exports = [
         validateRule: "readonly",
         updateRule: "readonly",
         addRule: "readonly",
-        deleteRule: "readonly"
+        deleteRule: "readonly",
+        getElementSelector: "readonly"
       }
     },
 
