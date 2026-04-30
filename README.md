@@ -164,6 +164,7 @@ defaultRules.js (built-in fallback)
 .
 ├── manifest.json
 ├── package.json
+├── jest.config.e2e.js
 ├── src/
 │   ├── background.js
 │   ├── copyRules.json
@@ -187,8 +188,16 @@ defaultRules.js (built-in fallback)
     ├── popup/
     │   ├── popup.test.js
     │   └── popup-source.test.js
-    └── shared/
-        └── *.test.js
+    ├── shared/
+    │   └── *.test.js
+    └── e2e/
+        ├── helpers/
+        │   └── browser.js
+        ├── fixtures/
+        │   └── test-page.html
+        ├── popup.test.js
+        ├── content.test.js
+        └── ruleTester.test.js
 ```
 
 ---
@@ -197,8 +206,10 @@ defaultRules.js (built-in fallback)
 
 ```bash
 npm install
-npm test
-npm run check   # lint + format check (run before committing)
+npm test              # unit tests (Jest + jsdom)
+npm run test:e2e      # e2e tests (Puppeteer, headless Chrome)
+npm run test:e2e:watch  # e2e tests with visible browser, slowed down for debugging
+npm run check         # lint + format check (run before committing)
 ```
 
 ---

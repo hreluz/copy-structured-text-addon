@@ -144,10 +144,32 @@ module.exports = [
     }
   },
 
+  // e2e test files — Node + Jest + browser globals (browser-side code runs inside page.evaluate)
+  {
+    files: ["tests/e2e/**/*.js"],
+
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "commonjs",
+      globals: {
+        ...globals.node,
+        ...globals.jest,
+        ...globals.browser,
+        chrome: "readonly"
+      }
+    },
+
+    rules: {
+      "no-unused-vars": "warn",
+      "no-console": "off"
+    }
+  },
+
   // Node/CommonJS files and tests
   {
     files: [
       "tests/**/*.test.js",
+      "jest.config.e2e.js",
       "eslint.config.js",
       "src/shared/defaultRules.js",
       "src/shared/extractText.js",
