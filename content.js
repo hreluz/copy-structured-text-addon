@@ -115,26 +115,6 @@ chrome.runtime.onMessage.addListener(async (message) => {
 let pickerActive = false;
 let highlightedElement = null;
 
-function getElementSelector(element) {
-  if (!element || element === document.body) {
-    return "body";
-  }
-
-  if (element.id) {
-    return `#${CSS.escape(element.id)}`;
-  }
-
-  const classSelector = [...element.classList]
-    .map((className) => `.${CSS.escape(className)}`)
-    .join("");
-
-  if (classSelector) {
-    return `${element.tagName.toLowerCase()}${classSelector}`;
-  }
-
-  return element.tagName.toLowerCase();
-}
-
 function highlightElement(element) {
   if (highlightedElement) {
     highlightedElement.style.outline = "";
