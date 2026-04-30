@@ -45,6 +45,7 @@ function resetForm() {
   form.reset();
   editIndexInput.value = "";
   submitButton.textContent = "Add Rule";
+  cancelEditButton.textContent = "Cancel";
   cancelEditButton.classList.add("hidden");
 }
 
@@ -55,6 +56,7 @@ function enterEditMode(rule, index) {
   textSelectorInput.value = rule.textSelector || "";
 
   submitButton.textContent = "Update Rule";
+  cancelEditButton.textContent = "Cancel Edit";
   cancelEditButton.classList.remove("hidden");
 }
 
@@ -213,7 +215,8 @@ rulesList.addEventListener("click", async (event) => {
   }
 });
 
-cancelEditButton.addEventListener("click", () => {
+cancelEditButton.addEventListener("click", async () => {
+  await chrome.storage.local.remove(["pendingPickedRule"]);
   resetForm();
 });
 
@@ -312,6 +315,10 @@ async function loadPendingPickedRule() {
   nameInput.value = rule.name;
   containerSelectorInput.value = rule.containerSelector;
   textSelectorInput.value = rule.textSelector || "";
+
+  submitButton.textContent = "Add Picked Rule";
+  cancelEditButton.textContent = "Discard Pick";
+  cancelEditButton.classList.remove("hidden");
 
   await chrome.storage.local.remove(["pendingPickedRule"]);
 }

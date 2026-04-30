@@ -45,4 +45,24 @@ describe("popup.html structure", () => {
 
     expect(scripts).toContain("popup.js");
   });
+
+  test("has cancel edit button", () => {
+    const button = document.getElementById("cancelEditButton");
+
+    expect(button).not.toBeNull();
+    expect(button.getAttribute("type")).toBe("button");
+  });
+
+  test("cancel button starts hidden", () => {
+    const button = document.getElementById("cancelEditButton");
+
+    expect(button.classList.contains("hidden")).toBe(true);
+  });
+
+  test("has pick element button", () => {
+    const button = document.getElementById("pickElementButton");
+
+    expect(button).not.toBeNull();
+    expect(button.getAttribute("type")).toBe("button");
+  });
 });

@@ -8,36 +8,40 @@ Instead of copying raw text, you define **what part of the DOM should be extract
 
 ## Features
 
-- Right-click anywhere → extract structured text
-- Works on **Chrome** and **Brave**
+- Right-click anywhere → extract structured text  
+- Works on **Chrome** and **Brave**  
 - Supports:
   - Link text (`<a>`)
-  - Complex DOM structures
+  - Complex DOM structures  
 - **UI to manage rules directly from the browser**
   - Create rules
   - Edit rules
-  - Delete rules
-- **Visual element picker (click to generate selector)**
-- **Import / Export rules (JSON)**
-- **Shows which rule matched after copy (toast)**
-- **Displays last matched rule in popup**
+  - Delete rules  
+- **Visual element picker (click to generate selector)**  
+- **Edit picked selector before saving**  
+- **Import / Export rules (JSON)**  
+- **Shows which rule matched after copy (toast)**  
+- **Displays last matched rule in popup**  
 - Supports BOTH:
   - UI rules (stored locally)
-  - External JSON rules (`copyRules.json`)
-- Priority system (UI > JSON > Default)
-- Unit tested extraction logic
+  - External JSON rules (`copyRules.json`)  
+- Priority system (UI > JSON > Default)  
+- Unit tested extraction logic  
 
 ---
 
 ## Installation (Local)
 
 1. Open:
-- Chrome: `chrome://extensions`
-- Brave: `brave://extensions`
 
-2. Enable **Developer mode**
-3. Click **Load unpacked**
-4. Select your project folder
+- Chrome: `chrome://extensions`  
+- Brave: `brave://extensions`  
+
+2. Enable **Developer mode**  
+
+3. Click **Load unpacked**  
+
+4. Select your project folder  
 
 ---
 
@@ -45,42 +49,42 @@ Instead of copying raw text, you define **what part of the DOM should be extract
 
 ### Copy text
 
-1. Right-click any element
-2. Click: `Copy structured text`
-3. Paste → extracted value
+1. Right-click any element  
+2. Click: `Copy structured text`  
+3. Paste → extracted value  
 
 ---
 
-### Manage rules (UI)
+## Manage rules (UI)
 
-1. Click the extension icon
+1. Click the extension icon  
 
 2. Create a rule:
-   - Fill:
-     - Name
-     - Container Selector
-     - Text Selector (optional)
-   - Click **Add Rule**
+   - Name  
+   - Container Selector  
+   - Text Selector (optional)  
+   - Click **Add Rule**  
 
 3. Edit a rule:
-   - Click **Edit**
-   - Modify the fields
-   - Click **Update Rule**
+   - Click **Edit**  
+   - Modify fields  
+   - Click **Update Rule**  
 
 4. Delete a rule:
-   - Click **Delete**
+   - Click **Delete**  
 
-5. Cancel editing:
-   - Click **Cancel Edit**
+5. Cancel:
+   - **Cancel Edit** → when editing  
+   - **Discard Pick** → when using picker  
 
 ---
 
 ### UI Behavior
 
-- New rules are added at the top
-- Edited rules keep their position
-- Deleting removes immediately
-- Changes persist using `chrome.storage.local`
+- New rules are added at the top  
+- Edited rules keep their position  
+- Deleting removes immediately  
+- Changes persist using `chrome.storage.local`  
 
 ---
 
@@ -90,35 +94,43 @@ Quickly create rules without writing selectors manually.
 
 ### How it works
 
-1. Open the extension popup
-2. Click **Pick Element**
-3. Move your mouse over elements on the page (they will be highlighted)
-4. Click the element you want
-5. Re-open the popup
-6. The rule form will be pre-filled with a suggested selector
-7. Adjust if needed and click **Add Rule**
+1. Open the extension popup  
+2. Click **Pick Element**  
+3. Hover elements (they highlight)  
+4. Click the element  
+5. Re-open popup  
+6. Form is pre-filled  
+7. **Edit selector if needed**  
+8. Click **Add Picked Rule**  
+
+---
 
 ### Tips
 
-- Press **Esc** to cancel picking
-- Prefer elements with stable attributes:
+- Press **Esc** to cancel  
+- Use **Discard Pick** to reset  
+- Prefer stable selectors:
   - `id`
   - `data-testid`
-  - meaningful classes
-- You can refine the generated selector before saving
+  - meaningful classes  
+- Always review before saving  
 
 ---
 
 ## Import / Export Rules
 
 ### Export
-- Click **Export Rules**
-- Downloads a JSON file with your custom rules
+
+- Click **Export Rules**  
+- Downloads JSON file  
 
 ### Import
-- Click **Import Rules**
-- Select a JSON file
-- Rules are validated before saving
+
+- Click **Import Rules**  
+- Select JSON file  
+- Rules are validated  
+
+---
 
 ### Example JSON
 
@@ -132,9 +144,11 @@ Quickly create rules without writing selectors manually.
 ]
 ```
 
+---
+
 ### Notes
 
-- Import replaces existing UI rules
+- Import **replaces UI rules**
 - Does NOT modify:
   - `copyRules.json`
   - `defaultRules.js`
@@ -164,6 +178,72 @@ defaultRules.js (built-in fallback)
   "textSelector": "[data-testid^=\"title-\"]"
 }
 ```
+
+### Behavior
+
+1. Find closest `containerSelector`  
+2. Inside it:
+   - If `textSelector` exists → extract it  
+   - Else → use container text  
+
+---
+
+## Rule Feedback
+
+After copying:
+
+- Toast appears:
+
+```
+Copied using rule: Auth Title
+```
+
+- Popup shows:
+  - Rule used  
+  - Text  
+  - Timestamp  
+
+---
+
+## Debugging
+
+### Check last matched rule
+
+Open popup:
+
+```
+Last Match
+```
+
+---
+
+### Common issues
+
+- No match → selectors wrong  
+- Wrong text → rule priority  
+- No copy → content script not loaded  
+
+---
+
+## External Rules (Optional)
+
+Define shared rules in:
+
+```
+copyRules.json
+```
+
+---
+
+## Selectors Guide
+
+| Type        | Example        | Meaning              |
+|------------|--------------|----------------------|
+| ID         | `#headerleft` | Select by ID         |
+| Class      | `.card`       | Select by class      |
+| Tag        | `h1`          | Select by tag        |
+| Attribute  | `[data-id=1]` | Select by attribute  |
+| Starts with| `[data^=x]`   | Attribute starts with|
 
 ---
 
@@ -198,6 +278,40 @@ defaultRules.js (built-in fallback)
 npm install
 npm test
 ```
+
+---
+
+## Testing
+
+Uses:
+
+- Jest  
+- jsdom  
+
+Covers:
+
+- Rule extraction  
+- Rule validation  
+- Rule merging  
+- Import / Export  
+- Popup structure  
+
+---
+
+## Technical Notes
+
+- Manifest V3  
+- `contextMenus` for right-click  
+- `chrome.storage.local` for rules  
+- Clipboard via `navigator.clipboard.writeText`  
+
+---
+
+## Limitations
+
+- Depends on selectors  
+- Some sites block right-click  
+- No picker history (yet)  
 
 ---
 
