@@ -9,6 +9,9 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check"
   },
+  "jest": {
+    "roots": ["<rootDir>/tests", "<rootDir>/src"]
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.2.1",

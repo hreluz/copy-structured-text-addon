@@ -10,7 +10,7 @@ module.exports = [
 
   // Chrome extension browser files
   {
-    files: ["background.js", "content.js", "popup.js"],
+    files: ["src/background.js", "src/content.js", "src/popup.js"],
 
     languageOptions: {
       ecmaVersion: "latest",
@@ -38,7 +38,7 @@ module.exports = [
 
   // selectorValidation (browser + node because of document + module.exports)
   {
-    files: ["selectorValidation.js"],
+    files: ["src/selectorValidation.js"],
 
     languageOptions: {
       ecmaVersion: "latest",
@@ -58,12 +58,12 @@ module.exports = [
   // Node/CommonJS files and tests
   {
     files: [
-      "*.test.js",
+      "tests/*.test.js",
       "eslint.config.js",
-      "defaultRules.js",
-      "extractText.js",
-      "ruleMerger.js",
-      "ruleStorage.js"
+      "src/defaultRules.js",
+      "src/extractText.js",
+      "src/ruleMerger.js",
+      "src/ruleStorage.js"
     ],
 
     languageOptions: {

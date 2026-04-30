@@ -29,7 +29,7 @@ async function saveCustomRules(rules) {
 
 async function getFileRules() {
   try {
-    const response = await fetch(chrome.runtime.getURL("copyRules.json"));
+    const response = await fetch(chrome.runtime.getURL("src/copyRules.json"));
 
     if (!response.ok) {
       return [];

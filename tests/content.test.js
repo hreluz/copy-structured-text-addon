@@ -5,7 +5,7 @@ describe("content.js structure", () => {
   let content;
 
   beforeAll(() => {
-    content = fs.readFileSync(path.resolve(__dirname, "content.js"), "utf-8");
+    content = fs.readFileSync(path.resolve(__dirname, "../src/content.js"), "utf-8");
   });
 
   test("defines rules state", () => {

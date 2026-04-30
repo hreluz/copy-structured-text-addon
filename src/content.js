@@ -44,7 +44,7 @@ async function loadRules() {
   let fileRules = [];
 
   try {
-    const url = chrome.runtime.getURL("copyRules.json");
+    const url = chrome.runtime.getURL("src/copyRules.json");
     const response = await fetch(url);
 
     if (response.ok) {
